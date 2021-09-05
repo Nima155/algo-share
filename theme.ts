@@ -9,7 +9,7 @@ const sizes = {
 	tablet: 640,
 }
 const additionalBreakpoints = {
-	tablet: `(min-width: ${sizes.tablet})`,
+	tablet: `(min-width: ${sizes.tablet}px)`,
 }
 const theme = {
 	colors,

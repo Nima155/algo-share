@@ -9,22 +9,21 @@ const WaveDiv = styled.div`
 	overflow: hidden;
 	line-height: 0;
 	transform: rotate(180deg);
-	@media ${theme.additionalBreakpoints.tablet} {
-		& svg {
-			position: relative;
-			display: block;
-			width: calc(189% + 1.3px);
-			height: 500px;
-		}
-	}
+
 	& svg {
 		position: relative;
 		display: block;
-		width: calc(200% + 1.3px);
-		height: 201px;
+		width: calc(197% + 1.3px);
+		height: 373px;
 	}
 	& .shape-fill {
-		fill: #ffffff;
+		fill: ${theme.colors.quarternaryBackground};
+	}
+	@media ${theme.additionalBreakpoints.tablet} {
+		& svg {
+			width: calc(189% + 1.3px);
+			height: 500px;
+		}
 	}
 `
 

@@ -3,27 +3,21 @@ import styled from 'styled-components'
 import theme from '../theme'
 import { useSpring, config, animated } from 'react-spring'
 
-interface IPopInMenu {
-	isOpen: boolean
-}
-
-const PopInMenu = styled.div<IPopInMenu>`
-	right: ${(props) => (props.isOpen ? 0 : 100)}%;
+const PopInMenu = styled(animated.div)`
+	background-color: ${theme.colors.secondaryBackground};
 `
 
 const CustomHr = styled(animated.hr).attrs({
 	className: 'border relative',
-})`
-	border-color: ${theme.colors.textPrimary};
-`
+})``
 
 export default function Hamburger() {
 	const [menuState, setMenuState] = useState<boolean>(false)
 	const [styleMid, apiMid] = useSpring(() => ({
 		x: 0,
-		config: config.gentle,
+		config: config.default,
 	}))
-	// Build a transition and catch its ref
+
 	const [styleTopAndBottom, apiTopAndBottom] = useSpring(() => ({
 		y: 0,
 		config: config.gentle,
@@ -31,13 +25,11 @@ export default function Hamburger() {
 			setMenuState(() => styleTopAndBottom.y.get() !== 0)
 		},
 	}))
-	// First run the spring, when it concludes run the transition
-	// useChain([transitionRefRest, springRefMiddleLine])
 
 	return (
 		<div>
 			<div
-				className="flex flex-col gap-2 w-6 cursor-pointer relative z-10"
+				className="flex flex-col gap-2 w-6 cursor-pointer relative z-20"
 				onClick={() => {
 					apiMid.start({ x: styleMid.x.get() ? 0 : 1 })
 					apiTopAndBottom.start({
@@ -52,6 +44,9 @@ export default function Hamburger() {
 							(val: number) => `rotate(${val * 45}deg)`
 						),
 						top: styleTopAndBottom.y.to((val) => `${val * 50}%`),
+						borderColor: styleTopAndBottom.y.to((val) =>
+							!val ? 'white' : 'black'
+						),
 					}}
 				/>
 				<CustomHr
@@ -60,6 +55,9 @@ export default function Hamburger() {
 							(val: number) => `translateX(-${val * 100}%)`
 						),
 						opacity: styleMid.x.to((val: number) => `${1 - val}`),
+						borderColor: styleTopAndBottom.y.to((val) =>
+							!val ? 'white' : 'black'
+						),
 					}}
 				/>
 				<CustomHr
@@ -68,12 +66,16 @@ export default function Hamburger() {
 							(val: number) => `rotate(-${val * 45}deg)`
 						),
 						top: styleTopAndBottom.y.to((val) => `${-val * 50}%`),
+						borderColor: styleTopAndBottom.y.to((val) =>
+							!val ? 'white' : 'black'
+						),
 					}}
 				/>
 			</div>
+			{/* // right: ${(props: IPopInMenu) => (props.isOpen ? 0 : -100)}%; */}
 			<PopInMenu
-				className="flex flex-col fixed gap-2 top-0 items-center w-3/5 min-h-full pt-10"
-				isOpen={menuState}
+				className="flex flex-col fixed gap-2 z-10 top-0 items-center w-3/5 max-w-xs min-h-full pt-10"
+				style={{ right: styleMid.x.to((y) => `${y * 100 - 100}%`) }}
 			>
 				<p>Sign In</p>
 				<p>Sign Up</p>
