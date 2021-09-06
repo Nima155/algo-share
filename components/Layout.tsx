@@ -1,22 +1,28 @@
 import React from 'react'
 import styled from 'styled-components'
 import theme from '../theme'
+import Footer from './Footer'
 import Header from './Header'
 
 const LayoutDiv = styled.div.attrs({
-	className:
-		'flex flex-col items-center justify-center p-2 relative font-fancy-rest',
+	className: 'flex flex-col font-fancy-rest',
 })`
 	min-height: 100vh;
 	width: 100vw;
 	background-color: ${theme.colors.primaryBackground};
+`
+const LayoutContent = styled.div.attrs({
+	className: 'flex flex-col justify-center',
+})`
+	flex: 1 0 auto;
 `
 
 export default function Layout({ children }: { children?: React.ReactNode }) {
 	return (
 		<LayoutDiv>
 			<Header />
-			{children}
+			<LayoutContent>{children}</LayoutContent>
+			<Footer />
 		</LayoutDiv>
 	)
 }

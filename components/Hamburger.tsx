@@ -2,11 +2,8 @@ import React, { useState } from 'react'
 import styled from 'styled-components'
 import theme from '../theme'
 import { useSpring, config, animated } from 'react-spring'
-
-const PopInMenu = styled(animated.div)`
-	background-color: ${theme.colors.secondaryBackground};
-`
-
+import Link from 'next/link'
+import PopInMenu from './PopInMenu'
 const CustomHr = styled(animated.hr).attrs({
 	className: 'border relative',
 })``
@@ -27,7 +24,7 @@ export default function Hamburger() {
 	}))
 
 	return (
-		<div>
+		<div className="md:hidden">
 			<div
 				className="flex flex-col gap-2 w-6 cursor-pointer relative z-20"
 				onClick={() => {
@@ -44,8 +41,11 @@ export default function Hamburger() {
 							(val: number) => `rotate(${val * 45}deg)`
 						),
 						top: styleTopAndBottom.y.to((val) => `${val * 50}%`),
-						borderColor: styleTopAndBottom.y.to((val) =>
-							!val ? 'white' : 'black'
+						borderColor: styleTopAndBottom.y.to(
+							(val) =>
+								`rgb(${(1 - val) * 255}, ${(1 - val) * 255}, ${
+									(1 - val) * 255
+								})`
 						),
 					}}
 				/>
@@ -55,8 +55,11 @@ export default function Hamburger() {
 							(val: number) => `translateX(-${val * 100}%)`
 						),
 						opacity: styleMid.x.to((val: number) => `${1 - val}`),
-						borderColor: styleTopAndBottom.y.to((val) =>
-							!val ? 'white' : 'black'
+						borderColor: styleTopAndBottom.y.to(
+							(val) =>
+								`rgb(${(1 - val) * 255}, ${(1 - val) * 255}, ${
+									(1 - val) * 255
+								})`
 						),
 					}}
 				/>
@@ -66,20 +69,21 @@ export default function Hamburger() {
 							(val: number) => `rotate(-${val * 45}deg)`
 						),
 						top: styleTopAndBottom.y.to((val) => `${-val * 50}%`),
-						borderColor: styleTopAndBottom.y.to((val) =>
-							!val ? 'white' : 'black'
+						borderColor: styleTopAndBottom.y.to(
+							(val) =>
+								`rgb(${(1 - val) * 255}, ${(1 - val) * 255}, ${
+									(1 - val) * 255
+								})`
 						),
 					}}
 				/>
 			</div>
-			{/* // right: ${(props: IPopInMenu) => (props.isOpen ? 0 : -100)}%; */}
+
 			<PopInMenu
-				className="flex flex-col fixed gap-2 z-10 top-0 items-center w-3/5 max-w-xs min-h-full pt-10"
-				style={{ right: styleMid.x.to((y) => `${y * 100 - 100}%`) }}
-			>
-				<p>Sign In</p>
-				<p>Sign Up</p>
-			</PopInMenu>
+				style={{
+					right: styleMid.x.to((val) => `${val * 100 - 100}%`),
+				}}
+			/>
 		</div>
 	)
 }

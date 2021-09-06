@@ -19,14 +19,16 @@ const blinkingAnimation = keyframes`
 		background-color: transparent;
 	}
 `
-const TypeWriterHeader = styled.h1`
+const TypeWriterHeader = styled.h1.attrs({
+	className: 'text-lg md:text-3xl z-10',
+})`
 	position: absolute;
+
 	color: white;
-	z-index: 20;
 	left: 50%;
 	top: 15%;
 	transform: translateX(-50%);
-	font-size: 3rem;
+	white-space: nowrap;
 	&:after,
 	&:before {
 		content: '';
