@@ -10,7 +10,7 @@ const CustomFooter = styled.footer`
 
 export default function Footer() {
 	return (
-		<CustomFooter className="w-full mt-auto text-white p-2">
+		<CustomFooter className="w-full mt-auto text-white p-2 z-50">
 			<section>
 				<p>
 					Created by{' '}

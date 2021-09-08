@@ -30,7 +30,7 @@ export default function Button({
 	onClick,
 }: {
 	text: string
-	children: React.ReactNode
+	children?: React.ReactNode
 	onClick?: MouseEventHandler
 }) {
 	const [loading, setLoading] = useState<boolean>(false)
@@ -41,10 +41,12 @@ export default function Button({
 				className={`px-2 py-1 rounded-md text-white flex justify-between`}
 				disabled={loading}
 				onClick={(e) => {
-					e.preventDefault()
-					setLoading(true)
-					if (onClick) onClick(e)
-					setLoading(false)
+					if (onClick) {
+						e.preventDefault()
+						setLoading(true)
+						onClick(e)
+						setLoading(false)
+					}
 				}}
 			>
 				<p>{text}</p>

@@ -11,10 +11,10 @@ export default function Header() {
 			<p className="font-fancy z-10">Algo Share</p>
 			<Hamburger />
 			<div className="md:flex gap-2 hidden">
-				<Link href="sign_in">
-					<CustomAnchor>Sign In</CustomAnchor>
+				<Link href="/login">
+					<CustomAnchor>Login</CustomAnchor>
 				</Link>
-				<Link href="sign_up">
+				<Link href="/signup">
 					<CustomAnchor>Sign Up</CustomAnchor>
 				</Link>
 			</div>
