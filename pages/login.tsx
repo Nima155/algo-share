@@ -1,43 +1,25 @@
-import { faLeaf } from '@fortawesome/free-solid-svg-icons'
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import React from 'react'
 import styled from 'styled-components'
 import Button from '../components/Button'
+import Input from '../components/Input'
+import Label from '../components/Input/Label'
 import Layout from '../components/Layout'
 import fetchJson from '../lib/fetchJson'
 import useUser from '../lib/useUser'
-
-const CustomInput = styled.input.attrs({
-	className: 'border-b-2 border-gray-300 border-solid w-full',
-})`
-	transition: all 250ms ease-in;
-	outline: 0;
-	padding-top: 20px;
-
-	&:focus {
-		border-color: green;
-	}
-	&:focus + label,
-	&:not(:placeholder-shown) + label {
-		transform: translateY(-100%);
-		font-size: calc(clamp(0.2rem, 1.2rem + 2vw, 1.4rem) * 0.8);
-	}
-`
-
-const CustomLabel = styled.label`
-	position: absolute;
-	bottom: 2px;
-	left: 0px;
-	color: #0005;
-	transition: all 300ms ease;
-	pointer-events: none;
-`
+import { useForm } from 'react-hook-form'
+import * as EmailValidator from 'email-validator'
+type FormValues = {
+	email: string
+	password: string
+}
 
 const CustomForm = styled.form.attrs({
 	className:
-		'self-center flex flex-col gap-2 pt-2 pb-4 px-4 bg-white shadow-md rounded-md m-2',
+		'self-center relative flex flex-col gap-2 pt-2 pb-4 px-4 bg-white shadow-md rounded-md m-2',
 })`
 	font-size: clamp(0.2rem, 1.2rem + 2vw, 1.4rem);
+	width: min(95%, 21.875rem);
+	overflow-wrap: break-word;
 `
 
 export default function Login() {
@@ -45,39 +27,66 @@ export default function Login() {
 		redirectTo: '/',
 		redirectIfFound: true,
 	})
+	const {
+		register,
+		handleSubmit,
+		formState: { errors },
+	} = useForm<FormValues>()
 
-	const onFormSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
-		e.preventDefault()
-
-		mutateUser(
-			await fetchJson('/api/login', {
-				method: 'POST',
-				body: JSON.stringify({
-					username: e.target.email.value,
-					password: e.target.password.value,
-				}),
-			})
-		)
+	const onFormSubmit = (isSignUp: boolean) => {
+		return async ({ email, password }: FormValues) => {
+			if (!isSignUp) {
+				mutateUser(
+					await fetchJson('/api/login', {
+						method: 'POST',
+						body: JSON.stringify({
+							username: email,
+							password: password,
+						}),
+					})
+				)
+			} else {
+			}
+		}
 	}
 
 	return (
 		<Layout>
-			<CustomForm onSubmit={onFormSubmit}>
+			<CustomForm onSubmit={handleSubmit(onFormSubmit(false))}>
 				<div className="relative pt-2">
-					<CustomInput type="email" id="email" name="email" placeholder="" />
-					<CustomLabel htmlFor="email">Email</CustomLabel>
-				</div>
-
-				<div className="relative pt-2 mb-3">
-					<CustomInput
-						type="password"
-						id="password"
-						name="password"
+					<Input
+						{...register('email', {
+							required: true,
+							validate: EmailValidator.validate,
+						})}
+						autoComplete="off"
 						placeholder=""
 					/>
-					<CustomLabel htmlFor="password">Password</CustomLabel>
+					<Label htmlFor="email">Email</Label>
 				</div>
-				<Button text="Login" />
+
+				<div className="relative pt-2 mb-4">
+					<Input
+						{...register('password', {
+							required: true,
+							minLength: {
+								value: 8,
+								message: 'Password must at least be 8 characters long',
+							},
+						})}
+						placeholder=""
+						autoComplete="off"
+					/>
+					<Label htmlFor="password">Password</Label>
+				</div>
+				<div className="flex justify-evenly px-3 gap-2">
+					<Button text="Log in" onClick={handleSubmit(onFormSubmit(false))} />
+					<Button text="Sign up" onClick={handleSubmit(onFormSubmit(true))} />
+				</div>
+
+				<p className="text-red-500 text-xs">
+					{[...Object.values(errors)][0]?.message}
+				</p>
 			</CustomForm>
 		</Layout>
 	)
