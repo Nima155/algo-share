@@ -34,6 +34,7 @@ export default function Button({
 	onClick?: MouseEventHandler
 }) {
 	const [loading, setLoading] = useState<boolean>(false)
+	console.log(loading)
 
 	return (
 		<label>

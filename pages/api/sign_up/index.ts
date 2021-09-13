@@ -58,7 +58,9 @@ export default connectDb(async function signUpHandler(
 
 			return res.status(200).end()
 		} catch (err) {
-			return res.status(400).json({ error: err.message })
+			if (err instanceof Error) {
+				return res.status(400).json({ error: err.message })
+			}
 		}
 	}
 	return res.status(500).json({ error: 'error of unknown origin!' })

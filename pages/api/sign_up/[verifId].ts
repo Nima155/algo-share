@@ -21,9 +21,11 @@ export default connectDb(async function verificationHandler(
 			await current_user.save()
 			return res.status(200)
 		} catch (err) {
-			return res.status(400).json({
-				error: err.message,
-			})
+			if (err instanceof Error) {
+				return res.status(400).json({
+					error: err.message,
+				})
+			}
 		}
 	}
 	return res.status(500).json({

@@ -14,12 +14,22 @@ export default function SignUpVerification() {
 	)
 
 	if (!data && !error) {
-		return <Layout>Loading...</Layout>
+		return (
+			<Layout>
+				<div className="self-center">
+					Please wait while we verify your account...
+				</div>
+			</Layout>
+		)
 	}
 
 	return (
 		<Layout>
-			Congratulations, you are now an official member of AlgoShare
+			{!error ? (
+				<p>Congratulations, you are now an official member of AlgoShare</p>
+			) : (
+				<p>{error}</p>
+			)}
 		</Layout>
 	)
 }

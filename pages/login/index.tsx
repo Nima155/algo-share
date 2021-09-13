@@ -50,6 +50,7 @@ export default function Login() {
 						password: password,
 					}),
 				}
+
 				if (!isSignUp) {
 					mutateUser(await fetchJson('/api/login', fetchArguments))
 				} else {

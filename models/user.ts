@@ -1,7 +1,7 @@
 import mongoose, { Document } from 'mongoose'
 import * as EmailValidator from 'email-validator'
 
-interface IUser extends Document {
+export interface IUser extends Document {
 	username: string
 	passwordHash: string
 	verifiedStatus: boolean

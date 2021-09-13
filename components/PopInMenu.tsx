@@ -4,6 +4,7 @@ import Link from 'next/link'
 import { animated } from '@react-spring/web'
 
 import CustomAnchor from './CustomAnchor'
+import useUser from '../lib/useUser'
 
 const PopInMenuContainer = styled(animated.nav)`
 	background-color: white;
@@ -11,6 +12,8 @@ const PopInMenuContainer = styled(animated.nav)`
 	max-width: 9rem;
 `
 export default function PopInMenu({ style }: { style: React.CSSProperties }) {
+	const { user } = useUser()
+
 	return (
 		<PopInMenuContainer
 			className="flex flex-col fixed gap-2 z-10 top-0 px-2 w-3/5
@@ -18,9 +21,15 @@ export default function PopInMenu({ style }: { style: React.CSSProperties }) {
 			style={style}
 		>
 			<hr />
-			<Link href="/login">
-				<CustomAnchor>Log in/Sign Up</CustomAnchor>
-			</Link>
+			{!user?.isLoggedIn ? (
+				<Link href="/login">
+					<CustomAnchor>Log in/Sign Up</CustomAnchor>
+				</Link>
+			) : (
+				<Link href="/profile">
+					<CustomAnchor>Dashboard</CustomAnchor>
+				</Link>
+			)}
 		</PopInMenuContainer>
 	)
 }
