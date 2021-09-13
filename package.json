@@ -18,6 +18,7 @@
     "bcrypt": "^5.0.1",
     "email-validator": "^2.0.4",
     "graphql": "^15.5.2",
+    "jwt-encode": "^1.0.1",
     "mongoose": "^6.0.5",
     "next": "11.1.2",
     "next-iron-session": "^4.2.0",
@@ -30,7 +31,9 @@
     "swr": "^1.0.0"
   },
   "devDependencies": {
+    "@types/bcrypt": "^5.0.0",
     "@types/node": "^16.7.13",
+    "@types/nodemailer": "^6.4.4",
     "@types/react": "17.0.19",
     "@types/styled-components": "^5.1.13",
     "autoprefixer": "^10.3.3",

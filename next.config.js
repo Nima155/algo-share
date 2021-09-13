@@ -8,5 +8,6 @@ module.exports = {
 		GMAIL_ADD: 'nimashadab155@gmail.com',
 		GMAIL_PASS:
 			"oijfojiaojfioji39042034#$$)(@)#(@UHUFSDHUASODAODNzxbjh;'gjrlspewrpj",
+		JWT_SECRET: "mfk[*$^'AkjC_9yU3TQ{]@u&br&+G,}a",
 	},
 }

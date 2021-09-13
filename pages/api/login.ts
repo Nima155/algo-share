@@ -6,7 +6,7 @@ import withSession from '../../lib/session'
 
 export default withSession(async (req, res) => {
 	const { username, password } = req.body
-	console.log(req.session)
+
 	res.json({
 		isLoggedIn: true,
 	})

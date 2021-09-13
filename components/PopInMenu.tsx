@@ -18,11 +18,8 @@ export default function PopInMenu({ style }: { style: React.CSSProperties }) {
 			style={style}
 		>
 			<hr />
-			<Link href={'/login'}>
-				<CustomAnchor>Sign In</CustomAnchor>
-			</Link>
-			<Link href={'/signup'}>
-				<CustomAnchor>Sign Up</CustomAnchor>
+			<Link href="/login">
+				<CustomAnchor>Log in/Sign Up</CustomAnchor>
 			</Link>
 		</PopInMenuContainer>
 	)

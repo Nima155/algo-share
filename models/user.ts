@@ -1,5 +1,14 @@
-import mongoose from 'mongoose'
+import mongoose, { Document } from 'mongoose'
 import * as EmailValidator from 'email-validator'
+
+interface IUser extends Document {
+	username: string
+	passwordHash: string
+	verifiedStatus: boolean
+	confirmationCode?: string
+	algorithms: [string]
+	favorites: [string]
+}
 
 const userSchema = new mongoose.Schema({
 	username: {
@@ -14,7 +23,17 @@ const userSchema = new mongoose.Schema({
 		},
 	},
 	passwordHash: {
+		type: String,
 		required: true,
+	},
+	verifiedStatus: {
+		type: Boolean,
+		default: false,
+		required: true,
+	},
+	confirmationCode: {
+		type: String,
+		unique: true,
 	},
 	algorithms: [{ type: mongoose.Schema.Types.ObjectId, ref: 'Algorithm' }],
 	favorites: [{ type: mongoose.Schema.Types.ObjectId, ref: 'Algorithm' }],
@@ -28,4 +47,5 @@ userSchema.set('toJSON', {
 	},
 })
 
-export default mongoose.model('User', userSchema)
+var User = mongoose.models.User || mongoose.model<IUser>('User', userSchema)
+export default User

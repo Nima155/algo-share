@@ -12,10 +12,7 @@ export default function Header() {
 			<Hamburger />
 			<div className="md:flex gap-2 hidden">
 				<Link href="/login">
-					<CustomAnchor>Login</CustomAnchor>
-				</Link>
-				<Link href="/signup">
-					<CustomAnchor>Sign Up</CustomAnchor>
+					<CustomAnchor>Log in/Sign up</CustomAnchor>
 				</Link>
 			</div>
 		</div>
