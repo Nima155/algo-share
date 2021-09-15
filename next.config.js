@@ -9,5 +9,13 @@ module.exports = {
 		GMAIL_PASS:
 			"oijfojiaojfioji39042034#$$)(@)#(@UHUFSDHUASODAODNzxbjh;'gjrlspewrpj",
 		JWT_SECRET: "mfk[*$^'AkjC_9yU3TQ{]@u&br&+G,}a",
+		CLOUDINARY_URL:
+			'cloudinary://928422177339158:zhlLAfZ7vzzVLT7kcYD3NBjmncU@nima155',
+		CLOUDINARY_API_KEY: '928422177339158',
+		CLOUDINARY_API_SECRET: 'zhlLAfZ7vzzVLT7kcYD3NBjmncU',
+		CLOUDINARY_CLOUD_NAME: 'nima155',
+	},
+	images: {
+		domains: ['res.cloudinary.com'],
 	},
 }

@@ -1,8 +1,15 @@
-import withSession from '../../lib/session'
+import { NextApiResponse } from 'next'
+import nextConnect from 'next-connect'
+import middleware from '../../middlewares/middleware'
+import { NextIronRequest } from '../../utils/types'
 
-export default withSession(async (req, res) => {
+const handler = nextConnect()
+handler.use(middleware)
+
+handler.post(async (req: NextIronRequest, res: NextApiResponse) => {
 	req.session.destroy() // destroy saved cookie
 	res.json({
 		isLoggedIn: false,
 	})
 })
+export default handler

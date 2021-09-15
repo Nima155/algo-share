@@ -4,7 +4,8 @@ import User from '../../../models/user'
 import { NextApiRequest, NextApiResponse } from 'next'
 import { toValidSignForm } from '../../../utils/signValidators'
 import bcrypt from 'bcrypt'
-import connectDb from '../../../middlewares/mongodb'
+import nextConnect from 'next-connect'
+import middleware from '../../../middlewares/middleware'
 const jwtEncoder = require('jwt-encode')
 // next-iron-session actually uses cookies
 // check if session/cookie is present.. if so redirect else try to login !?
@@ -26,42 +27,40 @@ async function sendMail(recipient: string, recipientSecret: string) {
 	})
 }
 
-export default connectDb(async function signUpHandler(
-	req: NextApiRequest,
-	res: NextApiResponse
-) {
-	if (req.method === 'POST') {
-		try {
-			const { username, password } = toValidSignForm(req.body)
+const handler = nextConnect()
+handler.use(middleware)
 
-			const userIsPresent = await User.findOne({
-				username,
-			})
+handler.post(async (req: NextApiRequest, res: NextApiResponse) => {
+	try {
+		const { username, password } = toValidSignForm(req.body)
 
-			if (userIsPresent) {
-				throw new Error('This username is already taken')
-			}
+		const userIsPresent = await User.findOne({
+			username,
+		})
 
-			const hashedPassword = await bcrypt.hash(password, 10)
+		if (userIsPresent) {
+			throw new Error('This username is already taken')
+		}
 
-			const signedEmail = jwtEncoder(username, process.env.JWT_SECRET)
+		const hashedPassword = await bcrypt.hash(password, 10)
 
-			const newUser = new User({
-				username,
-				passwordHash: hashedPassword,
-				confirmationCode: signedEmail,
-			})
+		const signedEmail = jwtEncoder(username, process.env.JWT_SECRET)
 
-			await newUser.save()
+		const newUser = new User({
+			username,
+			passwordHash: hashedPassword,
+			confirmationCode: signedEmail,
+		})
 
-			await sendMail(username, signedEmail)
+		await newUser.save()
 
-			return res.status(200).end()
-		} catch (err) {
-			if (err instanceof Error) {
-				return res.status(400).json({ error: err.message })
-			}
+		await sendMail(username, signedEmail)
+
+		return res.status(200).end()
+	} catch (err) {
+		if (err instanceof Error) {
+			return res.status(400).json({ error: err.message })
 		}
 	}
-	return res.status(500).json({ error: 'error of unknown origin!' })
 })
+export default handler

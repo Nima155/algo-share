@@ -6,6 +6,7 @@ export interface IUser extends Document {
 	passwordHash: string
 	verifiedStatus: boolean
 	confirmationCode?: string
+	profilePicture?: string
 	algorithms: [string]
 	favorites: [string]
 }
@@ -22,6 +23,8 @@ const userSchema = new mongoose.Schema({
 				`${value} is not a valid email address`,
 		},
 	},
+	profilePicture: String,
+
 	passwordHash: {
 		type: String,
 		required: true,
