@@ -7,6 +7,7 @@ import useUser from '../lib/useUser'
 import { IFontAwesome } from '../utils/types'
 import theme from '../theme'
 import MyProfile from '../components/MyProfile'
+import ComposeAlgorithm from '../components/ComposeAlgorithm'
 
 const DashboardContainer = styled.div`
 	margin-top: 45px;
@@ -40,7 +41,13 @@ export default function Profile() {
 							/>
 						))}
 					</nav>
-					{selected == 0 ? <MyProfile /> : user?.id}
+					{selected == 0 ? (
+						<MyProfile />
+					) : selected == 1 ? (
+						<ComposeAlgorithm />
+					) : (
+						user?.id
+					)}
 				</DashboardContainer>
 			</section>
 		</Layout>

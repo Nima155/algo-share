@@ -8,6 +8,7 @@ import { faSearch } from '@fortawesome/free-solid-svg-icons'
 import Wave from '../components/Wave'
 import styled, { keyframes } from 'styled-components'
 import theme from '../theme'
+import TextSelectInputLanguages from '../components/TextSelectInputLanguages'
 
 const typewriterAnimation = keyframes`
 	to {
@@ -69,24 +70,7 @@ const Home: NextPage = () => {
 				<Wave />
 				<TypeWriterHeader>Share your snippets with us</TypeWriterHeader>
 				<form className="flex flex-col z-20 gap-2 items-center">
-					<div className="flex flex-row">
-						<label>
-							<input
-								type="text"
-								placeholder="Algorithm"
-								className="min-h-full rounded-l-md px-2 py-1"
-							/>
-						</label>
-						<label>
-							<select
-								name="language"
-								id="language"
-								className="h-full rounded-r-md border-l-2"
-							>
-								<option value="CSS">css</option>
-							</select>
-						</label>
-					</div>
+					<TextSelectInputLanguages />
 					<Button text="Search">
 						<FontAwesomeIcon icon={faSearch} size={'sm'} />
 					</Button>

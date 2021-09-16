@@ -1,21 +1,20 @@
 import { IMainSignForm } from './types'
-import * as EmailValidator from 'email-validator'
+import isEmailOrNah from 'validator/lib/isEmail'
+import normalizeEmail from 'validator/lib/normalizeEmail'
+import generalValidators from './generalValidators'
 
-function isString(data: unknown): data is string {
-	return typeof data === 'string' || data instanceof String
-}
-
+const { isString } = generalValidators
 interface ISignForm {
 	username: unknown
 	password: unknown
 }
 
 function isEmail(em: unknown): string {
-	if (!isString(em) || !EmailValidator.validate(em)) {
+	if (!isString(em) || !isEmailOrNah(em)) {
 		throw new Error('Invalid email!')
 	}
 
-	return em
+	return normalizeEmail(em) || ''
 }
 
 function isPassword(pass: unknown): string {
@@ -32,4 +31,4 @@ function toValidSignForm({ username, password }: ISignForm): IMainSignForm {
 	}
 }
 
-export { toValidSignForm }
+export default toValidSignForm

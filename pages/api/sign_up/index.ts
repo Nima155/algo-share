@@ -2,7 +2,7 @@
 import nodemailer from 'nodemailer'
 import User from '../../../models/user'
 import { NextApiRequest, NextApiResponse } from 'next'
-import { toValidSignForm } from '../../../utils/signValidators'
+import toValidSignForm from '../../../utils/signValidators'
 import bcrypt from 'bcrypt'
 import nextConnect from 'next-connect'
 import middleware from '../../../middlewares/middleware'

@@ -5,7 +5,8 @@ import styled from 'styled-components'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faEdit } from '@fortawesome/free-regular-svg-icons'
 import fetcher from '../lib/fetchJson'
-
+import Link from 'next/link'
+import Button from './Button'
 // Photo will appear on page as 170 x 170 pixels
 // on desktop and 128 x 128 on smartphones.
 
@@ -55,6 +56,11 @@ export default function MyProfile() {
 						<FontAwesomeIcon icon={faEdit} />
 					</label>
 				</div>
+			</div>
+			<h2 className="text-center">{user?.username?.split('@')[0]}</h2>
+			<div className="flex gap-2">
+				<Button text="Published" />
+				<Button text="Favorites" />
 			</div>
 		</div>
 	)

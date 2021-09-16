@@ -1,5 +1,5 @@
 import mongoose, { Document } from 'mongoose'
-import * as EmailValidator from 'email-validator'
+import isEmail from 'validator/lib/isEmail'
 
 export interface IUser extends Document {
 	username: string
@@ -18,7 +18,7 @@ const userSchema = new mongoose.Schema({
 		required: true,
 		lowercase: true,
 		validate: {
-			validator: EmailValidator.validate,
+			validator: isEmail,
 			message: ({ value }: { value: string }) =>
 				`${value} is not a valid email address`,
 		},

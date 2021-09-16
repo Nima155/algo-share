@@ -7,7 +7,7 @@ import Layout from '../../components/Layout'
 import fetchJson from '../../lib/fetchJson'
 import useUser from '../../lib/useUser'
 import { useForm } from 'react-hook-form'
-import * as EmailValidator from 'email-validator'
+import isEmail from 'validator/lib/isEmail'
 
 type FormValues = {
 	email: string
@@ -69,7 +69,7 @@ export default function Login() {
 						<Input
 							{...register('email', {
 								required: true,
-								validate: EmailValidator.validate,
+								validate: isEmail,
 							})}
 							autoComplete="off"
 							placeholder=""
