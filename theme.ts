@@ -4,6 +4,8 @@ const colors = {
 	tertiaryBackground: '#3a4b40',
 	quarternaryBackground: '#002c2b',
 	textPrimary: '#2F4858',
+	textSecondary: '#FF8000',
+	textTertiary: '#990000',
 }
 const sizes = {
 	tablet: 640,

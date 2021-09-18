@@ -3,7 +3,7 @@ import Link from 'next/link'
 import Hamburger from './Hamburger'
 import CustomAnchor from './CustomAnchor'
 import useUser from '../lib/useUser'
-
+// className="font-fancy z-10"
 export default function Header() {
 	const { user } = useUser()
 
@@ -11,7 +11,9 @@ export default function Header() {
 		<div className="flex justify-between top-0 mt-2 p-2 w-full absolute max-w-full z-30 text-white">
 			{/* Logo goes in place of Hi! */}
 
-			<p className="font-fancy z-10">Algo Share</p>
+			<Link href="/">
+				<CustomAnchor className="font-fancy z-10">Algo Share</CustomAnchor>
+			</Link>
 			<Hamburger />
 
 			<div className="md:flex gap-2 hidden">

@@ -10,6 +10,8 @@ import MyProfile from '../components/MyProfile'
 import ComposeAlgorithm from '../components/ComposeAlgorithm'
 
 const DashboardContainer = styled.div`
+	display: flex;
+	flex-direction: column;
 	margin-top: 45px;
 	min-height: 90vh;
 `

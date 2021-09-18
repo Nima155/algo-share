@@ -9,6 +9,8 @@ import Wave from '../components/Wave'
 import styled, { keyframes } from 'styled-components'
 import theme from '../theme'
 import TextSelectInputLanguages from '../components/TextSelectInputLanguages'
+import { useForm } from 'react-hook-form'
+import { IAlgorithm } from '../utils/types'
 
 const typewriterAnimation = keyframes`
 	to {
@@ -59,6 +61,14 @@ const TypeWriterHeader = styled.h1.attrs({
 
 // TODO implement debouncing for searches
 const Home: NextPage = () => {
+	const {
+		register,
+		formState: { errors },
+		handleSubmit,
+	} = useForm<IAlgorithm>()
+
+	const onSubmit = (data: IAlgorithm) => {}
+
 	return (
 		<div className="w-screen min-h-screen">
 			<Head>
@@ -69,8 +79,11 @@ const Home: NextPage = () => {
 			<Layout>
 				<Wave />
 				<TypeWriterHeader>Share your snippets with us</TypeWriterHeader>
-				<form className="flex flex-col z-20 gap-2 items-center">
-					<TextSelectInputLanguages />
+				<form
+					className="flex flex-col z-20 gap-2 items-center"
+					onSubmit={handleSubmit(onSubmit)}
+				>
+					<TextSelectInputLanguages register={register} />
 					<Button text="Search">
 						<FontAwesomeIcon icon={faSearch} size={'sm'} />
 					</Button>
