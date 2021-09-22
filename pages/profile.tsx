@@ -28,7 +28,9 @@ const MENU_ITEMS = [faUser, faPlus, faCogs]
 
 export default function Profile() {
 	const [selected, setSelected] = useState<number>(0)
-	const { user } = useUser()
+	const { user } = useUser({
+		redirectTo: '/',
+	})
 	return (
 		<Layout>
 			<section className="p-2">

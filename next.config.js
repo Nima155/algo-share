@@ -1,6 +1,14 @@
 /** @type {import('next').NextConfig} */
 module.exports = {
 	reactStrictMode: true,
+	webpack(config) {
+		config.module.rules.push({
+			test: /\.svg$/,
+			use: ['@svgr/webpack'],
+		})
+
+		return config
+	},
 	env: {
 		COOKIE_SECRET: '6eZXee7BDnP9wr60nVt4fY5w4RFZg6kR',
 		MONGO_DB_URL:

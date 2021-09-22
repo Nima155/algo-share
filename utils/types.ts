@@ -19,7 +19,9 @@ export interface IFontAwesome extends FontAwesomeIconProps {
 export type NextIronRequest = NextApiRequest & { session: Session }
 
 export interface IAlgorithm {
+	code: string
 	algorithm: string
 	description?: string
 	language: string
+	author: { id: string; profilePicture?: string }
 }

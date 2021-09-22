@@ -25,8 +25,8 @@ const CustomForm = styled.form.attrs({
 
 export default function Login() {
 	const { mutateUser } = useUser({
-		redirectTo: '/',
 		redirectIfFound: true,
+		redirectTo: '/',
 	})
 
 	const [needToVerify, setNeedToVerify] = useState<boolean>(false)
@@ -34,6 +34,7 @@ export default function Login() {
 	const {
 		register,
 		handleSubmit,
+		setError,
 		formState: { errors },
 	} = useForm<FormValues>()
 
@@ -57,7 +58,14 @@ export default function Login() {
 					await fetchJson('/api/sign_up', fetchArguments)
 					setNeedToVerify(true)
 				}
-			} catch (err) {}
+			} catch (err) {
+				if (err instanceof Error) {
+					setError('password', {
+						type: 'manual',
+						message: err.message,
+					})
+				}
+			}
 		}
 	}
 

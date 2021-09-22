@@ -36,6 +36,7 @@
     "validator": "^13.6.0"
   },
   "devDependencies": {
+    "@svgr/webpack": "^5.5.0",
     "@types/bcrypt": "^5.0.0",
     "@types/codemirror": "^5.60.2",
     "@types/node": "^16.7.13",

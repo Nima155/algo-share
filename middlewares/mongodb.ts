@@ -11,6 +11,7 @@ export default async function connectDb(
 	if (mongoose.connections[0].readyState == 1) {
 		return next()
 	}
+
 	await mongoose.connect(process.env.MONGO_DB_URL || '')
 	return next()
 }

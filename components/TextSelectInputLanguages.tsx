@@ -18,8 +18,9 @@ const SpecialisedInput = styled.input.attrs({
 export default function TextSelectInputLanguages(props: {
 	additionalStyles?: string
 	register: UseFormRegister<IAlgorithm>
+	isForSearch?: boolean
 }) {
-	const { additionalStyles, register } = props
+	const { additionalStyles, register, isForSearch } = props
 
 	return (
 		<div className={`flex flex-row m-2 ${additionalStyles}`}>
@@ -27,7 +28,10 @@ export default function TextSelectInputLanguages(props: {
 				<SpecialisedInput
 					type="text"
 					placeholder="Algorithm"
-					{...register('algorithm')}
+					{...register('algorithm', {
+						required: !isForSearch,
+						minLength: !isForSearch ? 3 : 0,
+					})}
 				/>
 			</label>
 			<label>
@@ -42,8 +46,8 @@ export default function TextSelectInputLanguages(props: {
 						Language
 					</option>
 					{consts.VALID_LANGUAGES.map((v) => (
-						<option value={v} key={v}>
-							{v}
+						<option value={v[0]} key={v[0]}>
+							{v[0]}
 						</option>
 					))}
 				</CustomSelect>

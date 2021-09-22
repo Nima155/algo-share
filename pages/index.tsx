@@ -83,7 +83,7 @@ const Home: NextPage = () => {
 					className="flex flex-col z-20 gap-2 items-center"
 					onSubmit={handleSubmit(onSubmit)}
 				>
-					<TextSelectInputLanguages register={register} />
+					<TextSelectInputLanguages register={register} isForSearch={true} />
 					<Button text="Search">
 						<FontAwesomeIcon icon={faSearch} size={'sm'} />
 					</Button>

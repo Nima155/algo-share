@@ -9,6 +9,7 @@ import AutoResizableTextArea from './AutoResizableTextArea'
 import Button from './Button'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faShare } from '@fortawesome/free-solid-svg-icons'
+import fetcher from '../lib/fetchJson'
 // Workaround
 
 if (typeof navigator !== 'undefined') {
@@ -52,7 +53,23 @@ export default function ComposeAlgorithm() {
 
 	const modeWatch = watch(['language', 'description'])
 
-	const onSubmit = (data: IAlgorithm) => {}
+	const onSubmit = async (data: IAlgorithm) => {
+		try {
+			if (code.trim().length < 20) {
+				throw new Error('Code length must be more than 20')
+			}
+
+			await fetcher('api/algorithm', {
+				method: 'POST',
+				headers: {
+					'Content-Type': 'application/json',
+				},
+				body: JSON.stringify({ ...data, code }),
+			})
+		} catch (error) {
+			// TODO
+		}
+	}
 
 	return (
 		<ThemedContainer>
@@ -83,7 +100,7 @@ export default function ComposeAlgorithm() {
 					register={register}
 					curLen={modeWatch[1]?.length}
 				/>
-				<Button text={'Submit'}>
+				<Button text={'Submit'} onClick={handleSubmit(onSubmit)}>
 					<FontAwesomeIcon icon={faShare} />
 				</Button>
 			</form>

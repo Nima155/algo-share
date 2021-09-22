@@ -41,12 +41,14 @@ export default function Button({
 				className={`px-2 py-1 rounded-md text-white whitespace-nowrap flex justify-between`}
 				disabled={loading}
 				onClick={(e) => {
+					e.preventDefault()
+					setLoading(true)
+
 					if (onClick) {
-						e.preventDefault()
-						setLoading(true)
 						onClick(e)
-						setLoading(false)
 					}
+
+					setLoading(false)
 				}}
 			>
 				<p>{text}</p>

@@ -4,7 +4,7 @@ import useSWR from 'swr'
 import { IUserSession } from '../utils/types'
 
 export default function useUser({
-	redirectTo = '/',
+	redirectTo = '',
 	redirectIfFound = false,
 } = {}) {
 	const { data: user, mutate: mutateUser } = useSWR<IUserSession, Error>(

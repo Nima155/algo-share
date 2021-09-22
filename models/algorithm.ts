@@ -1,4 +1,5 @@
 import mongoose from 'mongoose'
+
 const algorithmSchema = new mongoose.Schema({
 	algorithm: {
 		type: String,
@@ -7,7 +8,11 @@ const algorithmSchema = new mongoose.Schema({
 	},
 
 	description: String,
-
+	code: {
+		type: String,
+		required: true,
+		minlength: 20,
+	},
 	language: {
 		type: String,
 		required: true,
@@ -28,4 +33,7 @@ algorithmSchema.set('toJSON', {
 	},
 })
 
-export default mongoose.model('Algorithm', algorithmSchema)
+var Algorithm =
+	mongoose.models.Algorithm || mongoose.model('Algorithm', algorithmSchema)
+
+export default Algorithm
