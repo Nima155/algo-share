@@ -4,7 +4,9 @@ import Link from 'next/link'
 import Hamburger from './Hamburger'
 import CustomAnchor from './CustomAnchor'
 import useUser from '../lib/useUser'
+
 // className="font-fancy z-10"
+
 export default function Header() {
 	const { user } = useUser()
 
@@ -13,7 +15,9 @@ export default function Header() {
 			{/* Logo goes in place of Hi! */}
 
 			<Link href="/">
-				<CustomAnchor className="font-fancy z-10">Algo Share</CustomAnchor>
+				<CustomAnchor className="font-fancy z-10 mix-blend-difference">
+					Algo Share
+				</CustomAnchor>
 			</Link>
 			<Hamburger />
 

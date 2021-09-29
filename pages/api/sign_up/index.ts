@@ -31,36 +31,30 @@ const handler = nextConnect()
 handler.use(middleware)
 
 handler.post(async (req: NextApiRequest, res: NextApiResponse) => {
-	try {
-		const { username, password } = toValidSignForm(req.body)
+	const { username, password } = toValidSignForm(req.body)
 
-		const userIsPresent = await User.findOne({
-			username,
-		})
+	const userIsPresent = await User.findOne({
+		username,
+	})
 
-		if (userIsPresent) {
-			throw new Error('This username is already taken')
-		}
-
-		const hashedPassword = await bcrypt.hash(password, 10)
-
-		const signedEmail = jwtEncoder(username, process.env.JWT_SECRET)
-
-		const newUser = new User({
-			username,
-			passwordHash: hashedPassword,
-			confirmationCode: signedEmail,
-		})
-
-		await newUser.save()
-
-		await sendMail(username, signedEmail)
-
-		return res.status(200).end()
-	} catch (err) {
-		if (err instanceof Error) {
-			return res.status(400).json({ error: err.message })
-		}
+	if (userIsPresent) {
+		throw new Error('This username is already taken')
 	}
+
+	const hashedPassword = await bcrypt.hash(password, 10)
+
+	const signedEmail = jwtEncoder(username, process.env.JWT_SECRET)
+
+	const newUser = new User({
+		username,
+		passwordHash: hashedPassword,
+		confirmationCode: signedEmail,
+	})
+
+	await newUser.save()
+
+	await sendMail(username, signedEmail)
+
+	return res.status(200).end()
 })
 export default handler

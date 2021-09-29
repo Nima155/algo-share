@@ -8,13 +8,7 @@ import { IFontAwesome } from '../utils/types'
 import theme from '../theme'
 import MyProfile from '../components/MyProfile'
 import ComposeAlgorithm from '../components/ComposeAlgorithm'
-
-const DashboardContainer = styled.div`
-	display: flex;
-	flex-direction: column;
-	margin-top: 45px;
-	min-height: 90vh;
-`
+import GeneralContainer from '../components/GeneralContainer'
 
 const CustomFontAwesomeIcon = styled(FontAwesomeIcon).attrs({
 	size: '2x',
@@ -34,7 +28,7 @@ export default function Profile() {
 	return (
 		<Layout>
 			<section className="p-2">
-				<DashboardContainer className="bg-gray-100 relative rounded">
+				<GeneralContainer className="bg-gray-100 relative rounded">
 					<nav className="flex w-full justify-between border-b p-2">
 						{MENU_ITEMS.map((e, i) => (
 							<CustomFontAwesomeIcon
@@ -52,7 +46,7 @@ export default function Profile() {
 					) : (
 						user?.id
 					)}
-				</DashboardContainer>
+				</GeneralContainer>
 			</section>
 		</Layout>
 	)

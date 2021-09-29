@@ -1,7 +1,7 @@
 import type { NextPage } from 'next'
 import Button from '../components/Button'
 import Head from 'next/head'
-import Image from 'next/image'
+import { useDebounce, useDebouncedCallback } from 'use-debounce'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import Layout from '../components/Layout'
 import { faSearch } from '@fortawesome/free-solid-svg-icons'
@@ -11,6 +11,12 @@ import theme from '../theme'
 import TextSelectInputLanguages from '../components/TextSelectInputLanguages'
 import { useForm } from 'react-hook-form'
 import { IAlgorithm } from '../utils/types'
+import fetcher from '../lib/fetchJson'
+import usePagination from '../lib/usePagination'
+import useSWR from 'swr'
+import { callbackPromise } from 'nodemailer/lib/shared'
+import { useEffect, useMemo, useState } from 'react'
+import AutoCompleteMenu from '../components/AutoCompleteMenu'
 
 const typewriterAnimation = keyframes`
 	to {
@@ -60,14 +66,42 @@ const TypeWriterHeader = styled.h1.attrs({
 // `
 
 // TODO implement debouncing for searches
+
 const Home: NextPage = () => {
 	const {
 		register,
 		formState: { errors },
 		handleSubmit,
-	} = useForm<IAlgorithm>()
+		watch,
+	} = useForm<IAlgorithm>({ mode: 'onChange' })
+	// /api/algorithms/search?q=${data.algorithm}
+	const { data: search, loadMore, setInitKey } = usePagination('', 20)
+	//
 
-	const onSubmit = (data: IAlgorithm) => {}
+	const onSubmit = async (data: { language: string; algorithm: string }) => {
+		setInitKey(
+			`/api/algorithms/search?q=${data.algorithm}&language=${data.language}`
+		)
+	}
+	const [lang, alg] = watch(['language', 'algorithm'])
+	const [langAlg, setLangAlg] = useState<null | string[]>(null)
+	const callback = useDebouncedCallback(() => {
+		setLangAlg([lang, alg])
+	}, 250)
+
+	useEffect(() => {
+		callback()
+	}, [lang, alg, callback])
+
+	const { data: autoCompleteData } = useSWR(
+		langAlg &&
+			langAlg[0] &&
+			langAlg[1] &&
+			`/api/algorithms/search?q=${langAlg[1]}&cursor=0&language=${
+				langAlg[0]
+			}&limit=${5}`
+	)
+	// console.log(autoCompleteData)
 
 	return (
 		<div className="w-screen min-h-screen">
@@ -83,11 +117,21 @@ const Home: NextPage = () => {
 					className="flex flex-col z-20 gap-2 items-center"
 					onSubmit={handleSubmit(onSubmit)}
 				>
-					<TextSelectInputLanguages register={register} isForSearch={true} />
-					<Button text="Search">
+					<div className="relative z-10">
+						<TextSelectInputLanguages register={register} isForSearch={true} />
+						{autoCompleteData?.data?.length ? (
+							<AutoCompleteMenu items={autoCompleteData.data} />
+						) : null}
+					</div>
+					<Button text="Search" onClick={handleSubmit(onSubmit)}>
 						<FontAwesomeIcon icon={faSearch} size={'sm'} />
 					</Button>
 				</form>
+				<ul>
+					{search?.map(({ data }) =>
+						data.map((e) => <li key={e._id}> {e.description} </li>)
+					)}
+				</ul>
 			</Layout>
 		</div>
 	)

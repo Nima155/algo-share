@@ -8,24 +8,17 @@ handler.use(middleware)
 
 handler.post(async (req: NextApiRequest, res: NextApiResponse) => {
 	const { verifId } = req.query
-	try {
-		let current_user = await User.findOne({
-			confirmationCode: verifId,
-		})
 
-		if (!current_user) {
-			throw new Error('Invalid token')
-		}
+	let current_user = await User.findOne({
+		confirmationCode: verifId,
+	})
 
-		current_user.verifiedStatus = true
-
-		await current_user.save()
-		return res.status(200)
-	} catch (err) {
-		if (err instanceof Error) {
-			return res.status(400).json({
-				error: err.message,
-			})
-		}
+	if (!current_user) {
+		throw new Error('Invalid token')
 	}
+
+	current_user.verifiedStatus = true
+
+	await current_user.save()
+	return res.status(200)
 })

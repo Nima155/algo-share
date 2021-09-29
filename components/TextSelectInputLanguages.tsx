@@ -32,6 +32,7 @@ export default function TextSelectInputLanguages(props: {
 						required: !isForSearch,
 						minLength: !isForSearch ? 3 : 0,
 					})}
+					autoComplete="off"
 				/>
 			</label>
 			<label>

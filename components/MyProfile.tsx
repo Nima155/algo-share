@@ -110,7 +110,7 @@ export default function MyProfile() {
 			</div>
 			{data &&
 				data.map((e) =>
-					e.data.map((e) => (
+					e.data.map((e: any) => (
 						<Card
 							key={e.id}
 							{...{

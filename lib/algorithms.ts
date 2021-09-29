@@ -3,7 +3,7 @@ import consts from '../utils/constants'
 export async function getAllAlgorithms() {
 	const res = await fetcher(`${consts.SERVER}/api/algorithms`)
 
-	return res.data.map((e) => {
+	return res.data.map((e: any) => {
 		return {
 			params: e,
 		}

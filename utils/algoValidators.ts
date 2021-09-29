@@ -34,7 +34,7 @@ function toValidAlgorithm({
 	algorithm,
 	description,
 	code,
-}: IFields): IAlgorithm {
+}: IFields): Omit<IAlgorithm, 'author'> {
 	return {
 		algorithm: isValidAlgorithm(algorithm),
 		language: isValidLanguage(language),

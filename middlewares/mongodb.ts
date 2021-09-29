@@ -12,6 +12,6 @@ export default async function connectDb(
 		return next()
 	}
 
-	await mongoose.connect(process.env.MONGO_DB_URL || '')
+	await mongoose.connect(process.env.MONGO_DB_URL || '', { autoIndex: false })
 	return next()
 }

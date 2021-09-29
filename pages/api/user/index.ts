@@ -8,6 +8,7 @@ import User, { IUser } from '../../../models/user'
 import { isValidImageFile } from '../../../utils/helpers'
 import { readFileSync, writeFile } from 'fs'
 import { v2 as cloudinary } from 'cloudinary'
+import auth from '../../../middlewares/auth'
 cloudinary.config({
 	cloud_name: process.env.CLOUDINARY_CLOUD_NAME,
 	api_key: process.env.CLOUDINARY_API_KEY,
@@ -39,14 +40,8 @@ handler
 			})
 		}
 	})
-	.patch<NextIronRequest, NextApiResponse>(async (req, res) => {
+	.patch<NextIronRequest, NextApiResponse>(auth, async (req, res) => {
 		const sess = req.session.get('user')
-		if (!sess) {
-			return res.status(401).json({
-				error: 'You must be logged in!',
-			})
-		}
-
 		const form = new formidable.IncomingForm()
 
 		const tempUploadFolder = path.join(process.cwd(), 'tmp')

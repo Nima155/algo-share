@@ -59,7 +59,7 @@ export default function ComposeAlgorithm() {
 				throw new Error('Code length must be more than 20')
 			}
 
-			await fetcher('api/algorithm', {
+			await fetcher('api/algorithms', {
 				method: 'POST',
 				headers: {
 					'Content-Type': 'application/json',

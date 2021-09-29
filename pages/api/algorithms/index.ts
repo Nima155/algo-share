@@ -5,40 +5,32 @@ import toValidAlgorithm from '../../../utils/algoValidators'
 import { IAlgorithm, NextIronRequest } from '../../../utils/types'
 import Algorithm from '../../../models/algorithm'
 import User from '../../../models/user'
+import auth from '../../../middlewares/auth'
 
 const handler = nextConnect()
 handler.use(middleware)
 
 handler
-	.post(async (req: NextIronRequest, res: NextApiResponse) => {
-		if (!req.session.get('user')) {
-			return res.status(401).json({
-				error: 'This feature is only available to registered users',
-			})
-		}
-		try {
-			const { algorithm, language, description, code }: IAlgorithm =
-				toValidAlgorithm(req.body)
+	.post(auth, async (req: NextIronRequest, res: NextApiResponse) => {
+		const {
+			algorithm,
+			language,
+			description,
+			code,
+		}: Omit<IAlgorithm, 'author'> = toValidAlgorithm(req.body)
 
-			const newAlgorithm = new Algorithm({
-				algorithm,
-				language,
-				description,
-				code,
-				author: req.session.get('user').id,
-			})
-			const addedAlgorithm = await newAlgorithm.save()
-			const findAuthor = await User.findById(req.session.get('user').id)
-			findAuthor.algorithms = findAuthor.algorithms.concat(addedAlgorithm.id)
-			await findAuthor.save()
-			return res.status(200).json(addedAlgorithm)
-		} catch (err) {
-			if (err instanceof Error) {
-				return res.status(400).json({
-					error: err.message,
-				})
-			}
-		}
+		const newAlgorithm = new Algorithm({
+			algorithm,
+			language,
+			description,
+			code,
+			author: req.session.get('user').id,
+		})
+		const addedAlgorithm = await newAlgorithm.save()
+		const findAuthor = await User.findById(req.session.get('user').id)
+		findAuthor.algorithms = findAuthor.algorithms.concat(addedAlgorithm.id)
+		await findAuthor.save()
+		return res.status(200).json(addedAlgorithm)
 	})
 	.get(async (req: NextIronRequest, res: NextApiResponse) => {
 		const data = await Algorithm.find({}).select('id')

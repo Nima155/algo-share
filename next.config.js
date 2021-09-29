@@ -1,5 +1,9 @@
 /** @type {import('next').NextConfig} */
-module.exports = {
+
+const withBundleAnalyzer = require('@next/bundle-analyzer')({
+	enabled: process.env.ANALYZE === 'true',
+})
+module.exports = withBundleAnalyzer({
 	reactStrictMode: true,
 	webpack(config) {
 		config.module.rules.push({
@@ -10,6 +14,7 @@ module.exports = {
 		return config
 	},
 	env: {
+		ANALYZE: 'true',
 		COOKIE_SECRET: '6eZXee7BDnP9wr60nVt4fY5w4RFZg6kR',
 		MONGO_DB_URL:
 			'mongodb+srv://Nima155:bqeHrKTJ5BStIcPA@cluster0.bajga.mongodb.net/algo_share?retryWrites=true&w=majority',
@@ -26,4 +31,4 @@ module.exports = {
 	images: {
 		domains: ['res.cloudinary.com'],
 	},
-}
+})

@@ -15,7 +15,7 @@ import crystal from '../public/crystal.svg'
 import fortran from '../public/fortran.svg'
 import commonlisp from '../public/commonlisp.svg'
 const SERVER =
-	process.env.NODE_ENV !== 'production' ? 'http://localhost:3000' : ''
+	process.env.NODE_ENV !== 'production' ? 'http://localhost:3000' : '' // TODO: add production server address
 const VALID_LANGUAGES = [
 	['clike', clike],
 	['python', python],

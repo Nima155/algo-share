@@ -5,14 +5,16 @@ import { animated } from '@react-spring/web'
 
 import CustomAnchor from './CustomAnchor'
 import useUser from '../lib/useUser'
+import fetcher from '../lib/fetchJson'
+import router from 'next/router'
 
 const PopInMenuContainer = styled(animated.nav)`
 	background-color: white;
 	color: black;
 	max-width: 9rem;
 `
-export default function PopInMenu({ style }: { style: React.CSSProperties }) {
-	const { user } = useUser()
+export default function PopInMenu({ style }: { style: any }) {
+	const { user, mutateUser } = useUser()
 
 	return (
 		<PopInMenuContainer
@@ -22,13 +24,28 @@ export default function PopInMenu({ style }: { style: React.CSSProperties }) {
 		>
 			<hr />
 			{!user?.isLoggedIn ? (
-				<Link href="/login">
+				<Link href="/login" passHref>
 					<CustomAnchor>Log in/Sign Up</CustomAnchor>
 				</Link>
 			) : (
-				<Link href="/profile">
-					<CustomAnchor>Dashboard</CustomAnchor>
-				</Link>
+				<>
+					<Link href="/profile" passHref>
+						<CustomAnchor>Dashboard</CustomAnchor>
+					</Link>
+					<button
+						className="text-left"
+						onClick={async (e) => {
+							e.preventDefault()
+							mutateUser(
+								await fetcher('/api/logout', { method: 'POST' }),
+								false
+							)
+							router.push('/')
+						}}
+					>
+						Logout
+					</button>
+				</>
 			)}
 		</PopInMenuContainer>
 	)

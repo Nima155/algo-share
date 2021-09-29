@@ -1,6 +1,6 @@
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faSpinner } from '@fortawesome/free-solid-svg-icons'
-import React, { MouseEventHandler, useState } from 'react'
+import React, { CSSProperties, MouseEventHandler, useState } from 'react'
 import styled from 'styled-components'
 import theme from '../theme'
 
@@ -28,10 +28,12 @@ export default function Button({
 	text,
 	children,
 	onClick,
+	style,
 }: {
 	text: string
 	children?: React.ReactNode
 	onClick?: MouseEventHandler
+	style?: CSSProperties
 }) {
 	const [loading, setLoading] = useState<boolean>(false)
 
@@ -50,6 +52,7 @@ export default function Button({
 
 					setLoading(false)
 				}}
+				style={style}
 			>
 				<p>{text}</p>
 				<div>
