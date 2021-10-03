@@ -17,17 +17,21 @@ handler.get(async (req: NextIronRequest, res: NextApiResponse) => {
 				index: 'searchAlgorithm',
 				compound: {
 					should: [
-						{
-							autocomplete: {
-								query: q,
-								path: 'description',
-								fuzzy: {
-									maxEdits: 2,
-									prefixLength: 1,
-								},
-								tokenOrder: 'sequential',
-							},
-						},
+						...(cursor
+							? [
+									{
+										autocomplete: {
+											query: q,
+											path: 'description',
+											fuzzy: {
+												maxEdits: 2,
+												prefixLength: 1,
+											},
+											tokenOrder: 'sequential',
+										},
+									},
+							  ]
+							: []),
 						{
 							autocomplete: {
 								query: q,
@@ -43,7 +47,7 @@ handler.get(async (req: NextIronRequest, res: NextApiResponse) => {
 				},
 			},
 		},
-		...(cursor !== '0'
+		...(cursor && cursor !== '0'
 			? [
 					{
 						$match: {

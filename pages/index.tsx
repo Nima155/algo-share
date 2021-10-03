@@ -1,7 +1,7 @@
 import type { NextPage } from 'next'
 import Button from '../components/Button'
 import Head from 'next/head'
-import { useDebounce, useDebouncedCallback } from 'use-debounce'
+import { useDebounce, useMeasure } from 'react-use'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import Layout from '../components/Layout'
 import { faSearch } from '@fortawesome/free-solid-svg-icons'
@@ -11,12 +11,13 @@ import theme from '../theme'
 import TextSelectInputLanguages from '../components/TextSelectInputLanguages'
 import { useForm } from 'react-hook-form'
 import { IAlgorithm } from '../utils/types'
-import fetcher from '../lib/fetchJson'
 import usePagination from '../lib/usePagination'
 import useSWR from 'swr'
-import { callbackPromise } from 'nodemailer/lib/shared'
-import { useEffect, useMemo, useState } from 'react'
+import { useMemo, useRef, useState } from 'react'
 import AutoCompleteMenu from '../components/AutoCompleteMenu'
+import { config, useTransition, useSpring } from '@react-spring/core'
+import { animated } from '@react-spring/web'
+import fetcher from '../lib/fetchJson'
 
 const typewriterAnimation = keyframes`
 	to {
@@ -83,25 +84,32 @@ const Home: NextPage = () => {
 			`/api/algorithms/search?q=${data.algorithm}&language=${data.language}`
 		)
 	}
-	const [lang, alg] = watch(['language', 'algorithm'])
-	const [langAlg, setLangAlg] = useState<null | string[]>(null)
-	const callback = useDebouncedCallback(() => {
-		setLangAlg([lang, alg])
-	}, 250)
 
-	useEffect(() => {
-		callback()
-	}, [lang, alg, callback])
+	const [lang, alg] = watch(['language', 'algorithm'])
+	const [langAlg, setLangAlg] = useState<(string | null)[]>([null, null])
+	const [previouslyFetchedData, setPreviouslyFetchedData] = useState<any>(null)
 
 	const { data: autoCompleteData } = useSWR(
-		langAlg &&
-			langAlg[0] &&
+		langAlg[0] &&
 			langAlg[1] &&
 			`/api/algorithms/search?q=${langAlg[1]}&cursor=0&language=${
 				langAlg[0]
 			}&limit=${5}`
 	)
-	// console.log(autoCompleteData)
+
+	useDebounce(
+		() => {
+			// console.log(lang, alg, autoCompleteData)
+			if (!lang || !alg) {
+				setPreviouslyFetchedData({ data: [] })
+			} else if (autoCompleteData) {
+				setPreviouslyFetchedData(autoCompleteData)
+			}
+			setLangAlg([lang, alg])
+		},
+		250,
+		[lang, alg]
+	)
 
 	return (
 		<div className="w-screen min-h-screen">
@@ -119,8 +127,11 @@ const Home: NextPage = () => {
 				>
 					<div className="relative z-10">
 						<TextSelectInputLanguages register={register} isForSearch={true} />
-						{autoCompleteData?.data?.length ? (
-							<AutoCompleteMenu items={autoCompleteData.data} />
+
+						{autoCompleteData || previouslyFetchedData ? (
+							<AutoCompleteMenu
+								items={autoCompleteData?.data || previouslyFetchedData?.data}
+							/>
 						) : null}
 					</div>
 					<Button text="Search" onClick={handleSubmit(onSubmit)}>
