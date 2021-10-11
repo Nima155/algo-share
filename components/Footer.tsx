@@ -10,20 +10,16 @@ const CustomFooter = styled.footer`
 
 export default function Footer() {
 	return (
-		<CustomFooter className="w-full mt-auto text-white p-2 z-50">
-			<section>
-				<p>
-					Created by{' '}
-					<a href="https://github.com/Nima155" className="underline">
-						<strong>Nima Shadab</strong>
-					</a>
-					<br />
-					<FontAwesomeIcon icon={faBolt} style={{ color: 'yellow' }} /> by{' '}
-					<a>
-						<strong> Next JS</strong>
-					</a>
-				</p>
-			</section>
+		<CustomFooter className="text-white z-50 flex-shrink-0 max-w-full">
+			<p className="inline-block p-2">
+				Created by{' '}
+				<a href="https://github.com/Nima155" className="underline">
+					Nima Shadab
+				</a>
+				<br />
+				<FontAwesomeIcon icon={faBolt} style={{ color: 'yellow' }} /> by{' '}
+				<a>Next JS</a>
+			</p>
 		</CustomFooter>
 	)
 }

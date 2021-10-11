@@ -8,7 +8,7 @@ const LayoutDiv = styled.div.attrs({
 	className: 'flex flex-col font-fancy-rest',
 })`
 	min-height: 100vh;
-	width: 100vw;
+	width: 100%;
 	background-color: ${theme.colors.primaryBackground};
 `
 const LayoutContent = styled.div.attrs({

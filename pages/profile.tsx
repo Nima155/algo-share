@@ -9,6 +9,7 @@ import theme from '../theme'
 import MyProfile from '../components/MyProfile'
 import ComposeAlgorithm from '../components/ComposeAlgorithm'
 import GeneralContainer from '../components/GeneralContainer'
+import Settings from '../components/Settings'
 
 const CustomFontAwesomeIcon = styled(FontAwesomeIcon).attrs({
 	size: '2x',
@@ -25,6 +26,8 @@ export default function Profile() {
 	const { user } = useUser({
 		redirectTo: '/',
 	})
+	console.log(user)
+
 	return (
 		<Layout>
 			<section className="p-2">
@@ -44,7 +47,7 @@ export default function Profile() {
 					) : selected == 1 ? (
 						<ComposeAlgorithm />
 					) : (
-						user?.id
+						<Settings />
 					)}
 				</GeneralContainer>
 			</section>

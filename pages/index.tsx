@@ -13,11 +13,13 @@ import { useForm } from 'react-hook-form'
 import { IAlgorithm } from '../utils/types'
 import usePagination from '../lib/usePagination'
 import useSWR from 'swr'
-import { useMemo, useRef, useState } from 'react'
+import { RefObject, useMemo, useRef, useState } from 'react'
 import AutoCompleteMenu from '../components/AutoCompleteMenu'
 import { config, useTransition, useSpring } from '@react-spring/core'
 import { animated } from '@react-spring/web'
 import fetcher from '../lib/fetchJson'
+
+import useOnClickOutside from '../lib/useOnClickOutside'
 
 const typewriterAnimation = keyframes`
 	to {
@@ -110,7 +112,11 @@ const Home: NextPage = () => {
 		250,
 		[lang, alg]
 	)
-
+	const [showAutoComplete, setShowAutoComplete] = useState(true)
+	const collapsableAutoCompleteRef = useRef(null)
+	useOnClickOutside(collapsableAutoCompleteRef, () => {
+		setShowAutoComplete(false)
+	})
 	return (
 		<div className="w-screen min-h-screen">
 			<Head>
@@ -121,16 +127,25 @@ const Home: NextPage = () => {
 			<Layout>
 				<Wave />
 				<TypeWriterHeader>Share your snippets with us</TypeWriterHeader>
+
 				<form
 					className="flex flex-col z-20 gap-2 items-center"
 					onSubmit={handleSubmit(onSubmit)}
 				>
-					<div className="relative z-10">
+					<div
+						className="relative z-10"
+						ref={collapsableAutoCompleteRef}
+						onClick={() => setShowAutoComplete(true)}
+					>
 						<TextSelectInputLanguages register={register} isForSearch={true} />
 
 						{autoCompleteData || previouslyFetchedData ? (
 							<AutoCompleteMenu
-								items={autoCompleteData?.data || previouslyFetchedData?.data}
+								items={
+									showAutoComplete
+										? autoCompleteData?.data || previouslyFetchedData?.data
+										: []
+								}
 							/>
 						) : null}
 					</div>
@@ -138,9 +153,14 @@ const Home: NextPage = () => {
 						<FontAwesomeIcon icon={faSearch} size={'sm'} />
 					</Button>
 				</form>
-				<ul>
+				<ul className="bg-white m-2 rounded-md z-20">
 					{search?.map(({ data }) =>
-						data.map((e) => <li key={e._id}> {e.description} </li>)
+						data.map((e) => (
+							<li key={e._id}>
+								{' '}
+								<div>{e.description}</div> <div>{e.language}</div>{' '}
+							</li>
+						))
 					)}
 				</ul>
 			</Layout>

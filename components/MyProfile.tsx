@@ -10,6 +10,8 @@ import theme from '../theme'
 import usePagination from '../lib/usePagination'
 import Card from './Card'
 import Button from './Button'
+import { config, useTransition } from '@react-spring/core'
+import { animated } from '@react-spring/web'
 
 const CustomRadioButton = styled.input`
 	height: 0;
@@ -61,6 +63,33 @@ export default function MyProfile() {
 	const onRadioChange = async (e: React.ChangeEvent<HTMLInputElement>) => {
 		setSearchMode(e.target.value)
 	}
+	// console.log(data)
+
+	const transition = useTransition(
+		data
+			?.map((e) => e.data)
+			?.flat()
+			.map((e, i) => ({ ...e, i })),
+		{
+			from: { opacity: 0, marginLeft: -100 },
+			enter: {
+				opacity: 1,
+				marginLeft: 0,
+			},
+			leave: {
+				immediate: true,
+				display: 'none',
+			},
+
+			keys: (item) => `${item.id} ${item.i}`,
+			config: {
+				tension: 65,
+				friction: 14,
+			},
+			trail: 90,
+		}
+	)
+	// console.log(data?.map((e) => e.data)?.flat())
 
 	return (
 		<div className="flex flex-col items-center mt-2 gap-2">
@@ -108,21 +137,23 @@ export default function MyProfile() {
 				/>
 				<label htmlFor="auth">authored</label>
 			</div>
-			{data &&
-				data.map((e) =>
-					e.data.map((e: any) => (
+
+			{transition((style, item) => {
+				return (
+					<animated.div style={style}>
 						<Card
-							key={e.id}
 							{...{
-								id: e.id,
-								author: e.author,
-								algorithm: e.algorithm,
-								language: e.language,
-								description: e.description,
+								id: item.id,
+								author: item.author,
+								algorithm: item.algorithm,
+								language: item.language,
+								description: item.description,
 							}}
 						/>
-					))
-				)}
+					</animated.div>
+				)
+			})}
+
 			{data && data[data.length - 1].data.length != 0 && (
 				<Button onClick={() => loadMore()} text={'Load more'} />
 			)}

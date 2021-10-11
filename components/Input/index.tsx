@@ -12,8 +12,8 @@ const Input = styled.input.attrs({
 	}
 	&:focus + label,
 	&:not(:placeholder-shown) + label {
-		transform: translateY(-100%);
-		font-size: calc(clamp(0.2rem, 1.2rem + 2vw, 1.4rem) * 0.8);
+		transform: translateY(-150%);
+		font-size: 0.8rem;
 	}
 `
 export default Input
