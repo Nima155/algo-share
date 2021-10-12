@@ -17,7 +17,7 @@ function isEmail(em: unknown): string {
 	return normalizeEmail(em) || ''
 }
 
-function isPassword(pass: unknown): string {
+export function isPassword(pass: unknown): string {
 	if (!isString(pass) || pass.length < 8) {
 		throw new Error('Password must be at least 8 characters long')
 	}
