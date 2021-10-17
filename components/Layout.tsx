@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { CSSProperties } from 'react'
 import styled from 'styled-components'
 import theme from '../theme'
 import Footer from './Footer'
@@ -17,9 +17,15 @@ const LayoutContent = styled.div.attrs({
 	flex: 1 0 auto;
 `
 
-export default function Layout({ children }: { children?: React.ReactNode }) {
+export default function Layout({
+	children,
+	style,
+}: {
+	children?: React.ReactNode
+	style?: CSSProperties
+}) {
 	return (
-		<LayoutDiv>
+		<LayoutDiv style={style}>
 			<Header />
 			<LayoutContent>{children}</LayoutContent>
 			<Footer />

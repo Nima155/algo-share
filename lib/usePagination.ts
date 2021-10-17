@@ -1,25 +1,35 @@
-import { useState } from 'react'
+import { useCallback, useState } from 'react'
 import useSWRInfinite from 'swr/infinite'
 
-function usePagination(initialKey: string, limit: number, mode?: string) {
-	const [initKey, setInitKey] = useState<string>(initialKey)
-	const { setSize, size, data, error } = useSWRInfinite((_, previousData) => {
-		if ((previousData && !previousData?.data.length) || !initKey) {
-			return null
-		}
+function usePagination(args: {
+	mode?: string
+	fallback?: any
+	limit: number
+	initialKey: string
+}) {
+	const { mode, fallback, limit, initialKey } = args
 
-		return `${initKey}${initKey.includes('?') ? '&' : '?'}cursor=${
-			previousData?.nextCursor ?? 0
-		}&limit=${limit}${mode ? '&mode=' + mode : ''}`
-	})
+	const { setSize, size, data, error, isValidating, mutate } = useSWRInfinite(
+		(_, previousData) => {
+			if ((previousData && !previousData?.data.length) || !initialKey) {
+				return null
+			}
 
-	const loadMore = () => setSize((size) => size + 1)
+			return `${initialKey}${initialKey.includes('?') ? '&' : '?'}cursor=${
+				previousData?.nextCursor ?? 0
+			}&limit=${limit}${mode ? '&mode=' + mode : ''}`
+		},
+		fallback && { fallback }
+	)
+
+	const loadMore = useCallback(() => setSize((size) => size + 1), [])
 
 	return {
-		setInitKey,
 		data,
 		loadMore,
 		error,
+		isValidating,
+		mutate,
 	}
 }
 export default usePagination

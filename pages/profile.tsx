@@ -26,31 +26,28 @@ export default function Profile() {
 	const { user } = useUser({
 		redirectTo: '/',
 	})
-	console.log(user)
 
 	return (
 		<Layout>
-			<section className="p-2">
-				<GeneralContainer className="bg-gray-100 relative rounded">
-					<nav className="flex w-full justify-between border-b p-2">
-						{MENU_ITEMS.map((e, i) => (
-							<CustomFontAwesomeIcon
-								icon={e}
-								key={i}
-								isActive={selected === i}
-								onClick={() => setSelected(i)}
-							/>
-						))}
-					</nav>
-					{selected == 0 ? (
-						<MyProfile />
-					) : selected == 1 ? (
-						<ComposeAlgorithm />
-					) : (
-						<Settings />
-					)}
-				</GeneralContainer>
-			</section>
+			<GeneralContainer className="bg-gray-100 relative rounded m-2">
+				<nav className="flex w-full justify-between border-b p-2">
+					{MENU_ITEMS.map((e, i) => (
+						<CustomFontAwesomeIcon
+							icon={e}
+							key={i}
+							isActive={selected === i}
+							onClick={() => setSelected(i)}
+						/>
+					))}
+				</nav>
+				{selected == 0 ? (
+					<MyProfile />
+				) : selected == 1 ? (
+					<ComposeAlgorithm />
+				) : (
+					<Settings />
+				)}
+			</GeneralContainer>
 		</Layout>
 	)
 }

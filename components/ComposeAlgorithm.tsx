@@ -15,6 +15,7 @@ import fetcher from '../lib/fetchJson'
 if (typeof navigator !== 'undefined') {
 	require('codemirror/lib/codemirror.css')
 	require('codemirror/theme/material.css')
+
 	require('codemirror/mode/javascript/javascript')
 	require('codemirror/mode/clike/clike')
 	require('codemirror/mode/python/python')

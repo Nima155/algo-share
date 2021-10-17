@@ -1,4 +1,5 @@
 import clike from '../public/clike.svg'
+import rust from '../public/rust.svg'
 import dart from '../public/dart.svg'
 import perl from '../public/perl.svg'
 import go from '../public/go.svg'
@@ -33,6 +34,7 @@ const VALID_LANGUAGES = [
 	['julia', julia],
 	['ruby', ruby],
 	['swift', swift],
+	['rust', rust],
 ].sort()
 
 const consts = {

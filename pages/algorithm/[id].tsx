@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { useEffect, useState } from 'react'
 import GeneralContainer from '../../components/GeneralContainer'
 import Layout from '../../components/Layout'
 import { getAllAlgorithms, getSingleAlgorithm } from '../../lib/algorithms'
@@ -12,6 +12,30 @@ import useUser from '../../lib/useUser'
 import useSWR from 'swr'
 import { useRouter } from 'next/router'
 import fetcher from '../../lib/fetchJson'
+import { useMountedState } from 'react-use'
+
+if (typeof navigator !== 'undefined') {
+	require('codemirror/lib/codemirror.css')
+	require('codemirror/theme/material.css')
+	require('codemirror/mode/javascript/javascript')
+	require('codemirror/mode/clike/clike')
+	require('codemirror/mode/python/python')
+	require('codemirror/mode/commonlisp/commonlisp')
+	require('codemirror/mode/crystal/crystal')
+	require('codemirror/mode/dart/dart')
+	require('codemirror/mode/elm/elm')
+	require('codemirror/mode/go/go')
+	require('codemirror/mode/rust/rust')
+	require('codemirror/mode/haskell/haskell')
+	require('codemirror/mode/fortran/fortran')
+	require('codemirror/mode/lua/lua')
+	require('codemirror/mode/julia/julia')
+	require('codemirror/mode/ruby/ruby')
+	require('codemirror/mode/swift/swift')
+	require('codemirror/mode/perl/perl')
+	require('codemirror/mode/php/php')
+}
+
 export default function Algorithm({
 	algorithm,
 	code,
@@ -22,7 +46,7 @@ export default function Algorithm({
 	const { user } = useUser()
 	const { query } = useRouter()
 	const { data, mutate } = useSWR(`/api/user/favorites/${query.id}`)
-	console.log(data)
+	const isMounted = useMountedState()
 
 	const onClickStar = async () => {
 		mutate(
@@ -34,13 +58,12 @@ export default function Algorithm({
 
 	return (
 		<Layout>
-			<section className="p-2">
+			{isMounted() && (
 				<GeneralContainer
-					className="rounded text-white"
+					className="rounded text-white m-2"
 					style={{ backgroundColor: theme.colors.textPrimary }}
 				>
 					<div className="flex p-2 items-center gap-2">
-						{/* Profile picture? */}
 						<Image
 							className="rounded-full"
 							src={author?.profilePicture || '/default_profile.png'}
@@ -78,7 +101,7 @@ export default function Algorithm({
 						{description || 'No description provided'}
 					</p>
 				</GeneralContainer>
-			</section>
+			)}
 		</Layout>
 	)
 }

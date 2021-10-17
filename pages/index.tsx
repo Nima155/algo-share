@@ -11,7 +11,7 @@ import theme from '../theme'
 import TextSelectInputLanguages from '../components/TextSelectInputLanguages'
 import { useForm } from 'react-hook-form'
 import { IAlgorithm } from '../utils/types'
-import usePagination from '../lib/usePagination'
+
 import useSWR from 'swr'
 import { RefObject, useMemo, useRef, useState } from 'react'
 import AutoCompleteMenu from '../components/AutoCompleteMenu'
@@ -20,6 +20,7 @@ import { animated } from '@react-spring/web'
 import fetcher from '../lib/fetchJson'
 
 import useOnClickOutside from '../lib/useOnClickOutside'
+import { useRouter } from 'next/router'
 
 const typewriterAnimation = keyframes`
 	to {
@@ -78,13 +79,17 @@ const Home: NextPage = () => {
 		watch,
 	} = useForm<IAlgorithm>({ mode: 'onChange' })
 	// /api/algorithms/search?q=${data.algorithm}
-	const { data: search, loadMore, setInitKey } = usePagination('', 20)
+	const router = useRouter()
 	//
 
-	const onSubmit = async (data: { language: string; algorithm: string }) => {
-		setInitKey(
-			`/api/algorithms/search?q=${data.algorithm}&language=${data.language}`
-		)
+	const onSubmit = async ({
+		language,
+		algorithm,
+	}: {
+		language: string
+		algorithm: string
+	}) => {
+		router.push(`/search?q=${algorithm}&language=${language}`)
 	}
 
 	const [lang, alg] = watch(['language', 'algorithm'])
@@ -117,6 +122,7 @@ const Home: NextPage = () => {
 	useOnClickOutside(collapsableAutoCompleteRef, () => {
 		setShowAutoComplete(false)
 	})
+
 	return (
 		<div className="w-screen min-h-screen">
 			<Head>
@@ -153,16 +159,6 @@ const Home: NextPage = () => {
 						<FontAwesomeIcon icon={faSearch} size={'sm'} />
 					</Button>
 				</form>
-				<ul className="bg-white m-2 rounded-md z-20">
-					{search?.map(({ data }) =>
-						data.map((e) => (
-							<li key={e._id}>
-								{' '}
-								<div>{e.description}</div> <div>{e.language}</div>{' '}
-							</li>
-						))
-					)}
-				</ul>
 			</Layout>
 		</div>
 	)

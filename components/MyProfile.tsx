@@ -1,16 +1,16 @@
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import useUser from '../lib/useUser'
 import Image from 'next/image'
 import styled from 'styled-components'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faEdit } from '@fortawesome/free-regular-svg-icons'
 import fetcher from '../lib/fetchJson'
-import Link from 'next/link'
+import { InView, useInView } from 'react-intersection-observer'
 import theme from '../theme'
 import usePagination from '../lib/usePagination'
 import Card from './Card'
-import Button from './Button'
-import { config, useTransition } from '@react-spring/core'
+
+import { useSprings, useTransition } from '@react-spring/core'
 import { animated } from '@react-spring/web'
 
 const CustomRadioButton = styled.input`
@@ -42,11 +42,27 @@ const CustomFileInput = styled.input`
 export default function MyProfile() {
 	const { user, mutateUser } = useUser()
 	const [searchMode, setSearchMode] = useState('algorithms')
-	const { data, error, loadMore } = usePagination(
-		'/api/user/algorithms',
-		5,
-		searchMode
-	)
+
+	const {
+		data: algorithmsData,
+		error: algorithmsError,
+		loadMore: loadMoreAlgorithms,
+	} = usePagination({
+		initialKey: '/api/user/algorithms',
+		limit: 5,
+		mode: 'algorithms',
+	})
+
+	const {
+		data: favoritesData,
+		error: favoritesError,
+		loadMore: loadMoreFavorites,
+	} = usePagination({
+		initialKey: '/api/user/algorithms',
+		limit: 5,
+		mode: 'favorites',
+	})
+
 	const onImgChange = async (e: React.ChangeEvent<HTMLInputElement>) => {
 		const formData = new FormData()
 		if (e.target.files?.length) {
@@ -63,36 +79,64 @@ export default function MyProfile() {
 	const onRadioChange = async (e: React.ChangeEvent<HTMLInputElement>) => {
 		setSearchMode(e.target.value)
 	}
+
+	const flatData = (
+		searchMode === 'algorithms' ? algorithmsData : favoritesData
+	)
+		?.map((e) => e.data)
+		?.flat()
+		.map((e, i) => ({ ...e, i }))
+
+	// const [springs, api] = useSprings(flatData?.length || 0, (index) => ({
+	// 	from: { opacity: 0, marginLeft: -100 },
+	// 	to: { opacity: 1, marginLeft: 0 },
+	// 	delay: index * 50,
+	// }))
+
+	const transition = useTransition(flatData, {
+		from: { opacity: 0, marginLeft: -100 },
+		enter: {
+			opacity: 1,
+			marginLeft: 0,
+		},
+		leave: {
+			immediate: true,
+			display: 'none',
+		},
+
+		keys: (item) => `${item.id} ${item.i}`,
+		config: {
+			tension: 65,
+			friction: 14,
+		},
+
+		trail: 90,
+	})
+	const [ref, inView] = useInView({
+		initialInView: true,
+		threshold: 0.5,
+	})
+
+	useEffect(() => {
+		// console.log(data)
+		const data = searchMode === 'algorithms' ? algorithmsData : favoritesData
+		if (inView && (data ? data[data?.length - 1].data?.length !== 0 : 1)) {
+			if (searchMode === 'algorithms') {
+				loadMoreAlgorithms()
+			} else {
+				loadMoreFavorites()
+			}
+		}
+	}, [inView])
 	// console.log(data)
 
-	const transition = useTransition(
-		data
-			?.map((e) => e.data)
-			?.flat()
-			.map((e, i) => ({ ...e, i })),
-		{
-			from: { opacity: 0, marginLeft: -100 },
-			enter: {
-				opacity: 1,
-				marginLeft: 0,
-			},
-			leave: {
-				immediate: true,
-				display: 'none',
-			},
-
-			keys: (item) => `${item.id} ${item.i}`,
-			config: {
-				tension: 65,
-				friction: 14,
-			},
-			trail: 90,
-		}
-	)
-	// console.log(data?.map((e) => e.data)?.flat())
-
 	return (
-		<div className="flex flex-col items-center mt-2 gap-2">
+		<div
+			className="flex flex-col items-center mt-2 gap-2"
+			onScroll={(e) => {
+				e.target
+			}}
+		>
 			<div className="rounded-full relative">
 				<Image
 					src={`${
@@ -138,25 +182,21 @@ export default function MyProfile() {
 				<label htmlFor="auth">authored</label>
 			</div>
 
-			{transition((style, item) => {
-				return (
-					<animated.div style={style}>
-						<Card
-							{...{
-								id: item.id,
-								author: item.author,
-								algorithm: item.algorithm,
-								language: item.language,
-								description: item.description,
-							}}
-						/>
-					</animated.div>
-				)
-			})}
+			{transition((style, item) => (
+				<animated.div style={style} key={item.id}>
+					<Card
+						{...{
+							id: item.id,
+							author: item.author,
+							algorithm: item.algorithm,
+							language: item.language,
+							description: item.description,
+						}}
+					/>
+				</animated.div>
+			))}
 
-			{data && data[data.length - 1].data.length != 0 && (
-				<Button onClick={() => loadMore()} text={'Load more'} />
-			)}
+			<div className="h-1 bg-transparent" ref={ref}></div>
 		</div>
 	)
 }

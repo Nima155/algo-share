@@ -8,7 +8,7 @@ import toValidPasswordChangeObject from '../../../utils/changePassValidators'
 
 const handler = nextConnect()
 handler.use(middleware)
-
+// TODO: add forget password feature
 handler.put(async (req: NextIronRequest, res: NextApiResponse) => {
 	if (!req.session.get('user')) {
 		return res.status(401).json({ error: 'You must be logged in!!' })
