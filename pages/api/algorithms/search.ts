@@ -67,13 +67,27 @@ handler.get(async (req: NextIronRequest, res: NextApiResponse) => {
 						},
 					},
 			  ]),
+
 		{ $limit: +limit },
-		{ $sort: { id: 1 } },
+		{ $sort: { _id: 1 } },
+		{
+			$lookup: {
+				from: 'users',
+				let: { authorId: '$author' },
+				pipeline: [
+					{ $match: { $expr: { $eq: ['$_id', '$$authorId'] } } },
+					{ $project: { username: 1, profilePicture: 1 } },
+				],
+				as: 'author',
+			},
+		},
 	])
 
 	return res.json({
 		data: rses,
-		...(rses.length && { nextCursor: rses[rses.length - 1]._id?.toString() }),
+		...(rses.length
+			? { nextCursor: rses[rses.length - 1]._id?.toString() }
+			: { nextCursor: cursor }),
 	})
 })
 export default handler

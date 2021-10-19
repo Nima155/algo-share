@@ -27,7 +27,6 @@ handler.get(async (req: NextIronRequest, res: NextApiResponse) => {
 		.select({
 			[dataString]: { $slice: [+cursor, +limit] },
 		})
-	// console.log(data)
 
 	return res.status(200).json({
 		data: data[dataString],

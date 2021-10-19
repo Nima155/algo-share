@@ -1,4 +1,4 @@
-import { useCallback, useState } from 'react'
+import { useCallback, useRef, useState } from 'react'
 import useSWRInfinite from 'swr/infinite'
 
 function usePagination(args: {
@@ -8,6 +8,7 @@ function usePagination(args: {
 	initialKey: string
 }) {
 	const { mode, fallback, limit, initialKey } = args
+	// TODO: reflect all changes immediately
 
 	const { setSize, size, data, error, isValidating, mutate } = useSWRInfinite(
 		(_, previousData) => {
@@ -19,7 +20,7 @@ function usePagination(args: {
 				previousData?.nextCursor ?? 0
 			}&limit=${limit}${mode ? '&mode=' + mode : ''}`
 		},
-		fallback && { fallback }
+		fallback && { fallbackData: fallback }
 	)
 
 	const loadMore = useCallback(() => setSize((size) => size + 1), [])

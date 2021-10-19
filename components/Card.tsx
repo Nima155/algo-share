@@ -1,6 +1,6 @@
 import consts from '../utils/constants'
 import React, { ReactNode } from 'react'
-import { IAlgorithm } from '../utils/types'
+import { IAlgorithm, Optional } from '../utils/types'
 import styled from 'styled-components'
 import theme from '../theme'
 import Link from 'next/link'
@@ -15,8 +15,6 @@ const CardLayout = styled.div`
 	padding: 5px;
 	margin: 0.5rem 0;
 `
-
-type Optional<T, K extends keyof T> = Pick<Partial<T>, K> & Omit<T, K>
 
 export default function Card(
 	props: Optional<IAlgorithm & { children?: ReactNode; id: string }, 'code'>
@@ -53,7 +51,10 @@ export default function Card(
 			</div>
 
 			<Link href={`/algorithm/${id}`}>
-				<a className="hover:underline w-max capitalize">{algorithm}</a>
+				<a className="hover:underline w-max capitalize">
+					{' '}
+					<h2> {algorithm}</h2>
+				</a>
 			</Link>
 
 			<p className=" bg-white p-1 rounded-md text-xs">

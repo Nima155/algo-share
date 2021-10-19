@@ -1,89 +1,85 @@
 import React, { useState } from 'react'
 import styled from 'styled-components'
 import theme from '../theme'
-import { useSpring, config, animated } from 'react-spring'
+import {
+	useSprings,
+	config,
+	animated,
+	useSpringRef,
+	useSpring,
+	useChain,
+} from 'react-spring'
 import Link from 'next/link'
 import PopInMenu from './PopInMenu'
 const CustomHr = styled(animated.hr).attrs({
-	className: 'border relative',
+	className: 'border relative z-40',
 })``
 
-export default function Hamburger() {
-	const [menuState, setMenuState] = useState<boolean>(false)
-	const [styleMid, apiMid] = useSpring(() => ({
-		x: 0,
-		config: config.default,
-	}))
-
-	const [styleTopAndBottom, apiTopAndBottom] = useSpring(() => ({
-		y: 0,
-		config: config.gentle,
-		onRest: () => {
-			setMenuState(() => styleTopAndBottom.y.get() !== 0)
+const transformations = {
+	before: [
+		{
+			transform: 'rotate(0deg) translate3d(0px, 0px, 0px)',
+			opacity: 1,
+			borderColor: '#fff',
 		},
+		{ transform: 'translateX(0%)', opacity: 1, borderColor: '#fff' },
+		{
+			transform: 'rotate(0deg) translate3d(0px, 0px, 0px)',
+			opacity: 1,
+			borderColor: '#fff',
+		},
+	],
+	after: [
+		{
+			transform: 'rotate(45deg) translate3d(1px, 9px, 0px)',
+			borderColor: '#000',
+		},
+		{ transform: 'translateX(-100%)', opacity: 0, borderColor: '#000' },
+		{
+			transform: 'rotate(-45deg) translate3d(6px, -12px, 0px)',
+			borderColor: '#000',
+		},
+	],
+}
+
+export default function Hamburger() {
+	const [toggled, setToggled] = useState(false)
+	const burgerRef = useSpringRef()
+	const popInRef = useSpringRef()
+
+	const [springs, api] = useSprings(3, (i) => ({
+		...transformations.before[i],
+		...(i == 2 && { ref: burgerRef }),
 	}))
+	const popInStyles = useSpring({
+		from: { x: !toggled ? -100 : 100 },
+		to: { x: !toggled ? 100 : -100 },
+		ref: popInRef,
+	})
+
+	useChain([burgerRef, popInRef])
 
 	return (
 		<div className="md:hidden">
 			<div
-				className="flex flex-col gap-2 w-6 cursor-pointer relative z-20"
+				className={`flex ${
+					toggled ? 'fixed' : 'relative'
+				} flex-col gap-2 w-6 cursor-pointer z-20 ${toggled ? 'right-2' : ''}`}
 				onClick={() => {
-					apiMid.start({ x: styleMid.x.get() ? 0 : 1 })
-					apiTopAndBottom.start({
-						y: styleTopAndBottom.y.get() ? 0 : 1,
-						delay: 30,
+					api.start((i) => {
+						const mode = !toggled ? 'after' : 'before'
+
+						return transformations[mode][i]
 					})
+					setToggled((v) => !v)
 				}}
 			>
-				<CustomHr
-					style={{
-						transform: styleTopAndBottom.y.to(
-							(val: number) => `rotate(${val * 45}deg)`
-						),
-						top: styleTopAndBottom.y.to((val) => `${val * 50}%`),
-						borderColor: styleTopAndBottom.y.to(
-							(val) =>
-								`rgb(${(1 - val) * 255}, ${(1 - val) * 255}, ${
-									(1 - val) * 255
-								})`
-						),
-					}}
-				/>
-				<CustomHr
-					style={{
-						transform: styleMid.x.to(
-							(val: number) => `translateX(-${val * 100}%)`
-						),
-						opacity: styleMid.x.to((val: number) => `${1 - val}`),
-						borderColor: styleTopAndBottom.y.to(
-							(val) =>
-								`rgb(${(1 - val) * 255}, ${(1 - val) * 255}, ${
-									(1 - val) * 255
-								})`
-						),
-					}}
-				/>
-				<CustomHr
-					style={{
-						transform: styleTopAndBottom.y.to(
-							(val: number) => `rotate(-${val * 45}deg)`
-						),
-						top: styleTopAndBottom.y.to((val) => `${-val * 50}%`),
-						borderColor: styleTopAndBottom.y.to(
-							(val) =>
-								`rgb(${(1 - val) * 255}, ${(1 - val) * 255}, ${
-									(1 - val) * 255
-								})`
-						),
-					}}
-				/>
+				{springs.map((styles, i) => {
+					return <CustomHr style={styles} key={i} />
+				})}
 			</div>
 
-			<PopInMenu
-				style={{
-					right: styleMid.x.to((val) => `${val * 100 - 100}%`),
-				}}
-			/>
+			<PopInMenu style={popInStyles} />
 		</div>
 	)
 }

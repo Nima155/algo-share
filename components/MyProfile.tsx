@@ -110,7 +110,7 @@ export default function MyProfile() {
 			friction: 14,
 		},
 
-		trail: 90,
+		trail: 40,
 	})
 	const [ref, inView] = useInView({
 		initialInView: true,
@@ -120,6 +120,7 @@ export default function MyProfile() {
 	useEffect(() => {
 		// console.log(data)
 		const data = searchMode === 'algorithms' ? algorithmsData : favoritesData
+
 		if (inView && (data ? data[data?.length - 1].data?.length !== 0 : 1)) {
 			if (searchMode === 'algorithms') {
 				loadMoreAlgorithms()
