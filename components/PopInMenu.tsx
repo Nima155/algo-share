@@ -20,7 +20,7 @@ export default function PopInMenu({ style }: { style: any }) {
 	return (
 		<PopInMenuContainer
 			className="flex flex-col fixed gap-2 z-10 top-0 px-2 w-3/5
-        min-h-full pt-10 shadow-xl"
+        min-h-full pt-10 shadow-xl -right-36"
 			style={style}
 		>
 			<hr />

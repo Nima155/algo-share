@@ -18,6 +18,14 @@ export interface IFontAwesome extends FontAwesomeIconProps {
 }
 export type NextIronRequest = NextApiRequest & { session: Session }
 
+export interface IComment {
+	content: string
+	parentId?: string
+	modifiedDate?: string
+	algorithmId: string
+	authorId: string
+}
+
 export interface IAlgorithm {
 	code: string
 	algorithm: string

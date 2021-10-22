@@ -51,9 +51,9 @@ export default function Hamburger() {
 		...transformations.before[i],
 		...(i == 2 && { ref: burgerRef }),
 	}))
+
 	const popInStyles = useSpring({
-		from: { x: !toggled ? -100 : 100 },
-		to: { x: !toggled ? 100 : -100 },
+		to: { x: !toggled ? 0 : -144, opacity: toggled ? 1 : 0 },
 		ref: popInRef,
 	})
 

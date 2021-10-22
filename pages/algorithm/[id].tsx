@@ -13,6 +13,7 @@ import useSWR from 'swr'
 import { useRouter } from 'next/router'
 import fetcher from '../../lib/fetchJson'
 import { useMountedState } from 'react-use'
+import { getAssociatedComments } from '../../lib/comments'
 
 if (typeof navigator !== 'undefined') {
 	require('codemirror/lib/codemirror.css')
@@ -96,10 +97,20 @@ export default function Algorithm({
 							screenReaderLabel: 'code environment for reading code',
 						}}
 					/>
+					<div className="bg-gray-100 text-black p-2 flex flex-col flex-grow rounded-b gap-1">
+						<h2 className="font text-gray-500 tracking-wider">Description:</h2>
 
-					<p className="bg-gray-100 text-black p-2 flex-grow rounded-b">
-						{description || 'No description provided'}
-					</p>
+						<p className="pl-4">{description || 'No description provided'}</p>
+
+						{/* TODO: Implement comment system! 
+							avatar -- username
+							comment
+								date modified	posted on
+						*/}
+						<section>
+							<h2 className="font text-gray-500 tracking-wider">Comments:</h2>
+						</section>
+					</div>
 				</GeneralContainer>
 			)}
 		</Layout>
@@ -115,8 +126,9 @@ export async function getStaticPaths() {
 
 export async function getStaticProps({ params }: { params: { id: string } }) {
 	const allInformationOnAlgorithm = await getSingleAlgorithm(params.id)
-
+	const allComments = await getAssociatedComments()
 	return {
 		props: allInformationOnAlgorithm,
+		revalidate: 60,
 	}
 }
