@@ -29,7 +29,7 @@ export default function SearchCard(
 				<p className="mt-2 text-xs text-center">nima155</p>
 			</div>
 			<div className="pl-3">
-				<Link href={`/algorithm/${id}`}>
+				<Link href={`/algorithms/${id}`}>
 					<a className="hover:underline w-max capitalize text-blue-800 text-lg">
 						<h2>{algorithm}</h2>
 					</a>

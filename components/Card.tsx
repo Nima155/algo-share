@@ -50,7 +50,7 @@ export default function Card(
 				{/* put profile picture here as well! */}
 			</div>
 
-			<Link href={`/algorithm/${id}`}>
+			<Link href={`/algorithms/${id}`}>
 				<a className="hover:underline w-max capitalize">
 					{' '}
 					<h2> {algorithm}</h2>

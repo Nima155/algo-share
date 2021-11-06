@@ -1,4 +1,5 @@
-import isISO8601 from 'validator/es/lib/isISO8601'
+import isISO8601 from 'validator/lib/isISO8601'
+
 function isString(data: unknown): data is string {
 	return typeof data === 'string' || data instanceof String
 }

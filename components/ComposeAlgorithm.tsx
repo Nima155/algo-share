@@ -97,9 +97,12 @@ export default function ComposeAlgorithm() {
 					rest={{
 						placeholder: 'Description',
 						className: 'rounded p-2 w-full mb-2',
+						rows: 8,
 					}}
+					maxLength={200}
 					register={register}
 					curLen={modeWatch[1]?.length}
+					textAreaName="description"
 				/>
 				<Button text={'Submit'} onClick={handleSubmit(onSubmit)}>
 					<FontAwesomeIcon icon={faShare} />

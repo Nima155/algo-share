@@ -34,6 +34,7 @@ handler
 	})
 	.get(async (req: NextIronRequest, res: NextApiResponse) => {
 		const data = await Algorithm.find({}).select('id')
+
 		return res.json({
 			data,
 		})

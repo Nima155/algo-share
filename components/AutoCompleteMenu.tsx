@@ -37,7 +37,7 @@ const AutoCompleteMenu = (props: {
 				<ul className="pb-1" ref={heightRef}>
 					{items.map((e) => (
 						<li key={e._id} className={`hover:bg-gray-200 p-2`}>
-							<Link href={`/algorithm/${e._id}`}>
+							<Link href={`/algorithms/${e._id}`}>
 								<a>{e.algorithm}</a>
 							</Link>
 						</li>

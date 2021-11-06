@@ -23,7 +23,12 @@ export interface IComment {
 	parentId?: string
 	modifiedDate?: string
 	algorithmId: string
-	authorId: string
+	author: string | { username: string; profilePicture?: string }
+	replyCount: number
+}
+export interface IExpandedComment extends IComment {
+	commentHierarchy: string[]
+	_id: string
 }
 
 export interface IAlgorithm {

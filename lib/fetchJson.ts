@@ -11,7 +11,5 @@ export default async function fetcher(...args: FetchParams) {
 		return data
 	}
 
-	const error = new Error(data.error)
-
-	throw error
+	throw new Error(data.error)
 }

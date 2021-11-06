@@ -11,15 +11,20 @@ const commentSchema = new mongoose.Schema({
 	parentId: {
 		type: mongoose.Schema.Types.ObjectId,
 		ref: 'Comment',
+		default: null,
 	},
 	modifiedDate: Date,
 	algorithmId: {
 		type: mongoose.Schema.Types.ObjectId,
 		ref: 'Algorithm',
 	},
-	authorId: {
+	author: {
 		type: mongoose.Schema.Types.ObjectId,
 		ref: 'User',
+	},
+	replyCount: {
+		type: Number,
+		default: 0,
 	},
 })
 

@@ -3,6 +3,7 @@ import React, {
 	useEffect,
 	useRef,
 	TextareaHTMLAttributes,
+	CSSProperties,
 } from 'react'
 import { UseFormRegister } from 'react-hook-form'
 import styled from 'styled-components'
@@ -10,12 +11,17 @@ import theme from '../theme'
 import { IAlgorithm } from '../utils/types'
 
 interface IExtendedTextArea {
-	rest: TextareaHTMLAttributes<HTMLTextAreaElement>
-	register: UseFormRegister<IAlgorithm>
+	register: UseFormRegister<any>
+	maxLength: number
+	rest?: TextareaHTMLAttributes<HTMLTextAreaElement>
 	curLen?: number
+	minLength?: number
+	style?: CSSProperties
+	textAreaName: string
 }
 const TextAreaContainer = styled.div<{
 	curLen?: number
+	maxLen: number
 }>`
 	position: relative;
 	width: clamp(7rem, 15rem + 10vw, 25rem);
@@ -24,11 +30,13 @@ const TextAreaContainer = styled.div<{
 		bottom: 10px;
 		right: 15px;
 		color: ${(props) =>
-			(props?.curLen || 0) < 200
+			(props?.curLen || 0) < props.maxLen
 				? theme.colors.textSecondary
 				: theme.colors.textTertiary};
 		content: '${(props) =>
-			200 - (props?.curLen || 0) < 20 ? 200 - (props?.curLen || 0) : ''}';
+			props.maxLen - (props?.curLen || 0) < 20
+				? props.maxLen - (props?.curLen || 0)
+				: ''}';
 	}
 `
 
@@ -39,7 +47,8 @@ const TextAreaWithCount = styled.textarea<{
 `
 
 const AutoResizableTextArea = (props: IExtendedTextArea) => {
-	const { register, rest, curLen } = props
+	const { register, rest, curLen, maxLength, minLength, style, textAreaName } =
+		props
 
 	const textAreaRef = useRef<HTMLTextAreaElement | null>(null)
 	const [text, setText] = useState('')
@@ -48,15 +57,28 @@ const AutoResizableTextArea = (props: IExtendedTextArea) => {
 
 	const {
 		ref,
+
 		onChange: onChangeReg,
 		...restOfRegister
-	} = register('description', {
-		maxLength: 200,
+	} = register(textAreaName, {
+		...{
+			maxLength: {
+				value: maxLength,
+				message: `Maximum length of content is ${maxLength}`,
+			},
+		},
+
+		...(minLength && {
+			minLength: {
+				value: minLength,
+				message: `Minimum length of content is ${minLength}`,
+			},
+		}),
 	})
 
 	useEffect(() => {
-		setParentHeight(`${textAreaRef.current!.scrollHeight}px`)
-		setTextAreaHeight(`${textAreaRef.current!.scrollHeight}px`)
+		setParentHeight(`${textAreaRef.current!.scrollHeight || 57}px`)
+		setTextAreaHeight(`${textAreaRef.current!.scrollHeight || 57}px`)
 	}, [text])
 
 	const onChangeHandler = (event: React.ChangeEvent<HTMLTextAreaElement>) => {
@@ -69,13 +91,14 @@ const AutoResizableTextArea = (props: IExtendedTextArea) => {
 		<TextAreaContainer
 			style={{
 				minHeight: parentHeight,
+				...style,
 			}}
 			curLen={curLen}
+			maxLen={maxLength}
 		>
 			<TextAreaWithCount
 				spellCheck={false}
 				textAreaHeight={textAreaHeight}
-				rows={8}
 				{...rest}
 				{...restOfRegister}
 				onChange={(e) => {

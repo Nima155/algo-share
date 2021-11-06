@@ -1,5 +1,5 @@
 import generalValidators from './generalValidators'
-import isLength from 'validator/es/lib/isLength'
+import isLength from 'validator/lib/isLength'
 import { IComment } from './types'
 const { isString, isIsoDate } = generalValidators
 
@@ -7,7 +7,7 @@ interface ICommentUnknown {
 	content: unknown
 	modifiedDate?: unknown
 	algorithmId: unknown
-	authorId: unknown
+	author: unknown
 	parentId: unknown
 }
 const thrower = (msg: string) => {
@@ -25,13 +25,11 @@ function toValidComment({
 	content,
 	modifiedDate,
 	algorithmId,
-	authorId,
+	author,
 	parentId,
 }: ICommentUnknown): IComment {
 	return {
-		authorId: isString(authorId)
-			? authorId
-			: thrower('Missing or malformed user id'),
+		author: isString(author) ? author : thrower('Missing or malformed user id'),
 		content: isComment(content),
 		...(isString(modifiedDate) && { modifiedDate: isIsoDate(modifiedDate) }),
 		algorithmId: isString(algorithmId)

@@ -40,7 +40,7 @@ export default function Button({
 	return (
 		<label>
 			<CustomButton
-				className={`px-2 py-1 rounded-md text-white whitespace-nowrap flex justify-between`}
+				className="px-2 py-1 rounded-md text-white whitespace-nowrap flex justify-between"
 				disabled={loading}
 				onClick={(e) => {
 					e.preventDefault()
